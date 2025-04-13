@@ -1,0 +1,13 @@
+# IDEs
+.idea/
+.vscode/
+
+*.xcodeproj/
+*.xcworkspace/
+*.metallib
+.DS_Store
+
+.cache/
+
+Binaries/
+Build/

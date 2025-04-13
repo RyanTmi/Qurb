@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.30)
+
+set(PROJECT_LANGUAGES CXX)
+if(APPLE)
+    list(APPEND PROJECT_LANGUAGES OBJCXX)
+endif()
+
+project(Qurb
+    VERSION 0.1
+    DESCRIPTION "Qurb Engine"
+    LANGUAGES ${PROJECT_LANGUAGES}
+)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(BIN_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/Binaries/$<CONFIG>")
+
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+add_subdirectory(Qurb)
+add_subdirectory(Samples)
