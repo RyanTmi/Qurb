@@ -1,13 +1,21 @@
-#include <Log/Log.hpp>
+#include "Sandbox.hpp"
+
+#include <CoreMinimal.hpp>
+#include <EntryPoint.hpp>
 
 using namespace qurb;
 
-auto main(int argc, const char** argv) -> int
+auto qurb::createApplication() -> Application*
 {
-    Log::fatal("Test fatal message");
-    Log::error("Test error message");
-    Log::warn("Test warn message");
-    Log::info("Test info message");
-    Log::debug("Test debug message");
-    Log::trace("Test trace message");
+    return new SandboxApplication();
+}
+
+auto SandboxApplication::initialize() -> void
+{
+    Log::info("SandboxApplication initialize");
+}
+
+auto SandboxApplication::shutdown() -> void
+{
+    Log::info("SandboxApplication shutdown");
 }
