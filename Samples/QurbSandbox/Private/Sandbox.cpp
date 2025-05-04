@@ -1,6 +1,24 @@
-#include <Log/Log.hpp>
+#include "Sandbox.hpp"
 
-auto main(int argc, const char** argv) -> int
+#include <CoreMinimal.hpp>
+#include <EntryPoint.hpp>
+
+using namespace qurb;
+
+auto SandboxApplication::initialize() -> void
 {
-    log("Hello, from Sandbox");
+    Log::info("{} initialized", _descriptor.name);
+}
+
+auto SandboxApplication::shutdown() -> void {}
+
+auto SandboxApplication::update(float32 deltaTime) -> void {}
+
+auto qurb::createApplication() -> Application*
+{
+    ApplicationDescriptor descriptor = {
+        .name = "Qurb Sandbox",
+    };
+
+    return new SandboxApplication(descriptor);
 }
