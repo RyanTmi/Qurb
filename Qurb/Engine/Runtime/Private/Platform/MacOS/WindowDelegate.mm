@@ -23,7 +23,6 @@ using namespace qurb;
 {
     baseWindow->close();
 
-    Log::debug("windowShouldClose");
     return NO;
 }
 

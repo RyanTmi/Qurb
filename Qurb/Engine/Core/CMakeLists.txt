@@ -3,6 +3,9 @@
 add_library(EngineCore SHARED)
 
 set(PUBLIC_HEADERS
+    Public/Containers/Array.hpp
+    Public/Containers/Vector.hpp
+
     Public/Debug/Ensure.hpp
     Public/Debug/Exceptions.hpp
 

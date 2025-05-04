@@ -2,17 +2,19 @@
 
 #pragma once
 
+#include "Containers/Vector.hpp"
 #include "Delegates/Delegate.hpp"
 #include "Events/Event.hpp"
 
 #include <type_traits>
-#include <vector>
 
 namespace qurb
 {
     template <typename T>
     concept Dispatchable = std::is_base_of_v<Event, T>;
 
+    /// \brief The `EventDispatcher` class.
+    /// \tparam E The type of event to dispatch.
     template <Dispatchable E>
     class EventDispatcher
     {
@@ -32,13 +34,13 @@ namespace qurb
         auto dispatch(E& event) -> void;
 
     private:
-        std::vector<Listener> _listeners;
+        Vector<Listener> _listeners;
     };
 
     template <Dispatchable E>
     auto EventDispatcher<E>::registerListener(Listener listener) -> void
     {
-        _listeners.push_back(listener);
+        _listeners.pushBack(listener);
     }
 
     template <Dispatchable E>

@@ -13,6 +13,8 @@ public:
 public:
     auto initialize() -> void override;
     auto shutdown() -> void override;
+
+    auto update(float32 deltaTime) -> void override;
 };
 
 inline SandboxApplication::SandboxApplication(const ApplicationDescriptor& descriptor)

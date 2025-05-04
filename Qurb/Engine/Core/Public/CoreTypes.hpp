@@ -17,6 +17,9 @@ namespace qurb
     using float32 = float;
     using float64 = double;
 
+    using usize = uint64;
+    using ssize = int64;
+
     static_assert(sizeof(uint8) == 1, "Size of uint8 should be 1 byte");
     static_assert(sizeof(uint16) == 2, "Size of uint16 should be 2 bytes");
     static_assert(sizeof(uint32) == 4, "Size of uint32 should be 4 bytes");

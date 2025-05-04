@@ -4,7 +4,6 @@
 
 #include "Events/EventDispatcher.hpp"
 #include "Events/WindowEvents.hpp"
-#include "Log/Log.hpp"
 
 #include <memory>
 #include <string>
@@ -39,19 +38,13 @@ namespace qurb
 
         auto close() -> void;
 
-        auto nativeHandle() -> NativeHandle&;
-
         template <Dispatchable E, typename... Args>
-        auto sendEvent(Args&&... args) -> void
-        {
-            std::get<EventDispatcher<E>>(_dispatchers).dispatch(std::forward<Args>(args)...);
-        }
+        auto sendEvent(Args&&... args) -> void;
 
         template <Dispatchable E>
-        auto listenEvent(EventDispatcher<E>::Listener listener) -> void
-        {
-            std::get<EventDispatcher<E>>(_dispatchers).registerListener(listener);
-        }
+        auto listenEvent(EventDispatcher<E>::Listener listener) -> void;
+
+        auto nativeHandle() -> NativeHandle&;
 
     private:
         using Dispatchers = std::tuple<EventDispatcher<WindowResizeEvent>>;
@@ -70,6 +63,18 @@ namespace qurb
     inline auto Window::close() -> void
     {
         _shouldClose = true;
+    }
+
+    template <Dispatchable E, typename... Args>
+    auto Window::sendEvent(Args&&... args) -> void
+    {
+        std::get<EventDispatcher<E>>(_dispatchers).dispatch(std::forward<Args>(args)...);
+    }
+
+    template <Dispatchable E>
+    auto Window::listenEvent(EventDispatcher<E>::Listener listener) -> void
+    {
+        std::get<EventDispatcher<E>>(_dispatchers).registerListener(listener);
     }
 
     inline auto Window::nativeHandle() -> NativeHandle&

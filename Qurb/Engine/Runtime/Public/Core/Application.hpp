@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreDefines.hpp"
+#include "CoreTypes.hpp"
 
 #include <memory>
 #include <string>
@@ -25,6 +26,8 @@ namespace qurb
     public:
         virtual auto initialize() -> void = 0;
         virtual auto shutdown() -> void   = 0;
+
+        virtual auto update(float32 deltaTime) -> void = 0;
 
     public:
         [[nodiscard]] auto descriptor() const -> const ApplicationDescriptor&;

@@ -12,6 +12,8 @@ auto SandboxApplication::initialize() -> void
 
 auto SandboxApplication::shutdown() -> void {}
 
+auto SandboxApplication::update(float32 deltaTime) -> void {}
+
 auto qurb::createApplication() -> Application*
 {
     ApplicationDescriptor descriptor = {

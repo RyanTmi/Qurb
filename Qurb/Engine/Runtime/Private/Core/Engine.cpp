@@ -24,15 +24,22 @@ namespace qurb
         _isRunning   = true;
         _isSuspended = false;
 
-        auto deltaTime = 0.0;
+        auto deltaTime = 0.0f;
 
         _clock.start();
         while (_isRunning)
         {
+            _platform.pollEvents();
+
+            if (_isSuspended)
+            {
+                continue;
+            }
+
             _clock.update();
             deltaTime = _clock.deltaTime();
 
-            _platform.pollEvents();
+            _application->update(deltaTime);
 
             // Destroy window that should be closed
             destroyClosedWindows();
