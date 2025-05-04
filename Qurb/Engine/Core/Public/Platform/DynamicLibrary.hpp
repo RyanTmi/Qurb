@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Containers/Vector.hpp"
 #include "CoreDefines.hpp"
 
 #include <string>
@@ -39,9 +40,9 @@ namespace qurb
         };
 
     private:
-        std::string           _name;
-        void*                 _nativeHandle;
-        std::vector<Function> _functions;
+        std::string      _name;
+        void*            _nativeHandle;
+        Vector<Function> _functions;
     };
 
     inline auto DynamicLibrary::isOpen() const -> bool

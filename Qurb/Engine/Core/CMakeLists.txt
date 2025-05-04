@@ -16,6 +16,7 @@ set(PUBLIC_HEADERS
 
     Public/Platform/Console.hpp
     Public/Platform/Detection.hpp
+    Public/Platform/DynamicLibrary.hpp
 
     Public/CoreDefines.hpp
     Public/CoreMinimal.hpp
@@ -36,6 +37,7 @@ if(APPLE)
     )
     list(APPEND PRIVATE_SOURCES
         Private/Platform/MacOS/Console.cpp
+        Private/Platform/MacOS/DynamicLibrary.cpp
     )
 endif()
 
