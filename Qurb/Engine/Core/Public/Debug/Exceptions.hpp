@@ -33,3 +33,4 @@ namespace qurb
         : std::runtime_error(std::string(location.function_name()) + ": is not implemented.")
     {}
 }
+

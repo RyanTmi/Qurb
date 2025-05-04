@@ -5,17 +5,18 @@
 
 using namespace qurb;
 
-auto qurb::createApplication() -> Application*
-{
-    return new SandboxApplication();
-}
-
 auto SandboxApplication::initialize() -> void
 {
-    Log::info("SandboxApplication initialize");
+    Log::info("{} initialized", _descriptor.name);
 }
 
-auto SandboxApplication::shutdown() -> void
+auto SandboxApplication::shutdown() -> void {}
+
+auto qurb::createApplication() -> Application*
 {
-    Log::info("SandboxApplication shutdown");
+    ApplicationDescriptor descriptor = {
+        .name = "Qurb Sandbox",
+    };
+
+    return new SandboxApplication(descriptor);
 }

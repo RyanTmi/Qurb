@@ -6,6 +6,9 @@ set(PUBLIC_HEADERS
     Public/Debug/Ensure.hpp
     Public/Debug/Exceptions.hpp
 
+    Public/Delegates/Delegate.hpp
+    Public/Delegates/MulticastDelegate.hpp
+
     Public/Log/Log.hpp
 
     Public/Platform/Console.hpp
@@ -15,6 +18,7 @@ set(PUBLIC_HEADERS
     Public/CoreMinimal.hpp
     Public/CoreTraits.hpp
     Public/CoreTypes.hpp
+    Public/CoreUtility.hpp
 )
 
 set(PRIVATE_HEADERS

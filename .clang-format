@@ -83,7 +83,7 @@ BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 BreakInheritanceList: BeforeColon
 BreakStringLiterals: true
-ColumnLimit: 0
+ColumnLimit: 160
 CompactNamespaces: true
 ConstructorInitializerIndentWidth: 4
 ContinuationIndentWidth: 4

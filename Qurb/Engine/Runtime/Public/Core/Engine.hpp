@@ -4,26 +4,50 @@
 
 #include "Core/Application.hpp"
 #include "CoreDefines.hpp"
+#include "Misc/Clock.hpp"
+#include "Platform/Platform.hpp"
+#include "Platform/Window.hpp"
+#include "Renderer/Renderer.hpp"
 
+#include <list>
 #include <memory>
 
 auto main(int argc, const char** argv) -> int;
 
 namespace qurb
 {
-    class QURB_API Engine
+    /// \brief The `Engine` class.
+    class QURB_API Engine final
     {
     public:
-        explicit Engine(Application* application);
-        ~Engine();
+        auto activeWindow() -> Window&;
 
     private:
         friend auto ::main(int argc, const char** argv) -> int;
 
-    private:
+        explicit Engine(Application* application);
+        ~Engine();
+
         auto run() -> void;
+        auto createWindow() -> void;
+        auto destroyClosedWindows() -> void;
+        auto onWindowResize(const WindowResizeEvent& e) -> bool;
 
     private:
+        Platform _platform;
+        Renderer _renderer;
+
+        std::list<Window>            _windows;
         std::unique_ptr<Application> _application;
+
+        Clock _clock;
+        bool  _isRunning;
+        bool  _isSuspended;
     };
+
+    inline auto Engine::activeWindow() -> Window&
+    {
+        // TODO: Multi window support
+        return _windows.front();
+    }
 }
