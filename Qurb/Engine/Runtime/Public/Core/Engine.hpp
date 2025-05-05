@@ -7,6 +7,7 @@
 #include "Misc/Clock.hpp"
 #include "Platform/Platform.hpp"
 #include "Platform/Window.hpp"
+#include "Plugins/PluginManager.hpp"
 #include "Renderer/Renderer.hpp"
 
 #include <list>
@@ -34,8 +35,9 @@ namespace qurb
         auto onWindowResize(const WindowResizeEvent& e) -> bool;
 
     private:
-        Platform _platform;
-        Renderer _renderer;
+        Platform      _platform;
+        Renderer      _renderer;
+        PluginManager _pluginManager;
 
         std::list<Window>            _windows;
         std::unique_ptr<Application> _application;
