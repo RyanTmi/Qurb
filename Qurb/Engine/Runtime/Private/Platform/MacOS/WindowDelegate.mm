@@ -39,7 +39,8 @@ using namespace qurb;
     layer.drawableSize  = drawableSize;
     layer.contentsScale = view.window.backingScaleFactor;
 
-    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow, drawableSize.width, drawableSize.height);
+    baseWindow->setSize(math::Vector2f(drawableSize.width, drawableSize.height));
+    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow);
 }
 
 - (void)windowDidChangeScreen:(NSNotification*)notification
@@ -55,7 +56,8 @@ using namespace qurb;
     layer.drawableSize  = drawableSize;
     layer.contentsScale = view.window.backingScaleFactor;
 
-    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow, drawableSize.width, drawableSize.height);
+    baseWindow->setSize(math::Vector2f(drawableSize.width, drawableSize.height));
+    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow);
 }
 
 - (void)windowDidMiniaturize:(NSNotification*)notification
@@ -64,7 +66,8 @@ using namespace qurb;
 
     auto& nativeWindow = baseWindow->nativeHandle();
 
-    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow, 0, 0);
+    baseWindow->setSize({0, 0});
+    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow);
 
     [nativeWindow.window miniaturize:nil];
 }
@@ -82,7 +85,8 @@ using namespace qurb;
     layer.drawableSize  = drawableSize;
     layer.contentsScale = view.window.backingScaleFactor;
 
-    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow, drawableSize.width, drawableSize.height);
+    baseWindow->setSize(math::Vector2f(drawableSize.width, drawableSize.height));
+    baseWindow->sendEvent<WindowResizeEvent>(*baseWindow);
 
     [nativeWindow.window deminiaturize:nil];
 }

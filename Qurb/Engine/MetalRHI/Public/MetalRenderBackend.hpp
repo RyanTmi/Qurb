@@ -4,19 +4,23 @@
 
 #include <RHI/RenderBackend.hpp>
 
-namespace qurb
+namespace qurb::rhi::metal
 {
-    /// \brief The `MetalRenderBackend` class.
-    class MetalRenderBackend final : public RenderBackend
+    /// \brief The `RenderBackend` class.
+    class RenderBackend final : public rhi::RenderBackend
     {
     public:
-        ~MetalRenderBackend() override = default;
+        using base = rhi::RenderBackend;
+
+    public:
+        ~RenderBackend() override = default;
 
     public:
         auto type() const -> RenderBackendType override;
+        auto createDevice() const -> rhi::Device* override;
     };
 
-    inline auto MetalRenderBackend::type() const -> RenderBackendType
+    inline auto RenderBackend::type() const -> RenderBackendType
     {
         return RenderBackendType::Metal;
     }
