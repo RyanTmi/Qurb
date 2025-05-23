@@ -2,7 +2,9 @@
 
 #pragma once
 
-namespace qurb
+#include "RHI/Device.hpp"
+
+namespace qurb::rhi
 {
     /// \brief The `RenderBackendType` enum.
     enum class RenderBackendType
@@ -21,5 +23,6 @@ namespace qurb
 
     public:
         virtual auto type() const -> RenderBackendType = 0;
+        virtual auto createDevice() const -> Device*   = 0;
     };
 }

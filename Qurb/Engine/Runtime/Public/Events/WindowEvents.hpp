@@ -13,6 +13,7 @@ namespace qurb
     {
         Window& window;
 
+    public:
         explicit WindowEvent(Window& window)
             : window(window)
         {}
@@ -20,13 +21,9 @@ namespace qurb
 
     struct WindowResizeEvent final : public WindowEvent
     {
-        uint16 width;
-        uint16 height;
-
-        WindowResizeEvent(Window& window, uint16 width, uint16 height)
+    public:
+        WindowResizeEvent(Window& window)
             : WindowEvent(window)
-            , width(width)
-            , height(height)
         {}
     };
 }

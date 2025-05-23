@@ -1,6 +1,7 @@
 #include "Core/Engine.hpp"
 
 #include "Containers/Vector.hpp"
+#include "Log/Log.hpp"
 
 namespace qurb
 {
@@ -62,11 +63,12 @@ namespace qurb
     auto Engine::createWindow() -> void
     {
         const auto windowDescriptor = WindowDescriptor {
-            .name = _application->descriptor().name,
+            .title = _application->descriptor().name,
+            .size  = math::Vector2f(1280.0f, 720.0f),
         };
 
         auto& window = _windows.emplace_back(windowDescriptor);
-        window.listenEvent<WindowResizeEvent>(bind<&Engine::onWindowResize>(this));
+        window.registerEvent<WindowResizeEvent>(bind<&Engine::onWindowResize>(this));
 
         _renderer.onWindowCreate(window);
     }
@@ -89,7 +91,9 @@ namespace qurb
     auto Engine::onWindowResize(const WindowResizeEvent& e) -> bool
     {
         // TODO: Handle multiple windows
-        _isSuspended = e.width == 0 or e.height == 0;
+        const auto [width, height] = e.window.size();
+
+        _isSuspended = width == 0 or height == 0;
 
         return false;
     }

@@ -4,6 +4,7 @@
 
 #include "Events/EventDispatcher.hpp"
 #include "Events/WindowEvents.hpp"
+#include "Math/Vector2.hpp"
 
 #include <memory>
 #include <string>
@@ -11,10 +12,16 @@
 
 namespace qurb
 {
+    namespace rhi
+    {
+        class RenderContext;
+    }
+
     /// \brief The `WindowDescriptor` struct.
     struct WindowDescriptor final
     {
-        std::string name;
+        std::string    title;
+        math::Vector2f size;
     };
 
     /// \brief The `Window` class.
@@ -34,6 +41,7 @@ namespace qurb
         auto operator=(Window&& other) noexcept -> Window&;
 
     public:
+        [[nodiscard]] auto size() const -> math::Vector2f;
         [[nodiscard]] auto shouldClose() const -> bool;
 
         auto close() -> void;
@@ -42,18 +50,33 @@ namespace qurb
         auto sendEvent(Args&&... args) -> void;
 
         template <Dispatchable E>
-        auto listenEvent(EventDispatcher<E>::Listener listener) -> void;
+        auto registerEvent(EventDispatcher<E>::Listener listener) -> void;
+
+        template <Dispatchable E>
+        auto unregisterEvent(EventDispatcher<E>::Listener listener) -> void;
+
+        auto setSize(math::Vector2f size) -> void;
 
         auto nativeHandle() -> NativeHandle&;
 
     private:
+        friend class Renderer;
+
         using Dispatchers = std::tuple<EventDispatcher<WindowResizeEvent>>;
 
     private:
         std::unique_ptr<NativeHandle> _nativeHandle;
-        Dispatchers                   _dispatchers;
+        rhi::RenderContext*           _renderContext;
+        std::string                   _title;
+        math::Vector2f                _size;
         bool                          _shouldClose;
+        Dispatchers                   _dispatchers;
     };
+
+    inline auto Window::size() const -> math::Vector2f
+    {
+        return _size;
+    }
 
     inline auto Window::shouldClose() const -> bool
     {
@@ -72,9 +95,20 @@ namespace qurb
     }
 
     template <Dispatchable E>
-    auto Window::listenEvent(EventDispatcher<E>::Listener listener) -> void
+    auto Window::registerEvent(EventDispatcher<E>::Listener listener) -> void
     {
         std::get<EventDispatcher<E>>(_dispatchers).registerListener(listener);
+    }
+
+    template <Dispatchable E>
+    auto Window::unregisterEvent(EventDispatcher<E>::Listener listener) -> void
+    {
+        std::get<EventDispatcher<E>>(_dispatchers).unregisterListener(listener);
+    }
+
+    inline auto Window::setSize(math::Vector2f size) -> void
+    {
+        _size = size;
     }
 
     inline auto Window::nativeHandle() -> NativeHandle&
