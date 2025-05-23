@@ -6,7 +6,7 @@ namespace qurb::rhi::metal
         : _device(device)
     {
         _device->retain();
-        _colorAttachments.resize(8);
+        _colorAttachments.reserve(8);
     }
 
     RenderTarget::~RenderTarget()
@@ -16,8 +16,15 @@ namespace qurb::rhi::metal
 
     auto RenderTarget::setSwapChainTexture(id<MTLTexture> texture, MTLPixelFormat format) -> void
     {
-        _colorAttachments[0].texture = [texture retain];
-        _colorAttachments[0].format  = format;
+        if (_colorAttachments.empty())
+        {
+            _colorAttachments.emplaceBack([texture retain], format);
+        }
+        else
+        {
+            _colorAttachments[0].texture = texture;
+            _colorAttachments[0].format  = format;
+        }
     }
 
     auto RenderTarget::setDepthTexture(id<MTLTexture> texture, MTLPixelFormat format) -> void
@@ -32,10 +39,12 @@ namespace qurb::rhi::metal
 
         for (usize i = 0; i < _colorAttachments.size(); ++i)
         {
-            renderPassDescriptor.colorAttachments[i].texture = _colorAttachments[i].texture;
-            // renderPassDescriptor.colorAttachments[i].loadAction = ;
-            // renderPassDescriptor.colorAttachments[i].storeAction = ;
-            // renderPassDescriptor.colorAttachments[i].clearColor = ;
+            const auto[r, g, b, a] = descriptor.clearColor;
+
+            renderPassDescriptor.colorAttachments[i].texture     = _colorAttachments[i].texture;
+            renderPassDescriptor.colorAttachments[i].loadAction  = MTLLoadActionClear;
+            renderPassDescriptor.colorAttachments[i].storeAction = MTLStoreActionStore;
+            renderPassDescriptor.colorAttachments[i].clearColor  = MTLClearColorMake(r, g, b, a);
         }
 
         if (_depthAttachment.has_value())

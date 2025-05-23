@@ -58,6 +58,7 @@ namespace qurb
         auto setSize(math::Vector2f size) -> void;
 
         auto nativeHandle() -> NativeHandle&;
+        auto renderContext() -> rhi::RenderContext*;
 
     private:
         friend class Renderer;
@@ -114,5 +115,10 @@ namespace qurb
     inline auto Window::nativeHandle() -> NativeHandle&
     {
         return *_nativeHandle;
+    }
+
+    inline auto Window::renderContext() -> rhi::RenderContext*
+    {
+        return _renderContext;
     }
 }

@@ -35,6 +35,8 @@ namespace qurb::rhi
     public:
         auto window() -> Window&;
 
+        virtual auto swapChain() -> SwapChain* = 0;
+
         virtual auto beginFrame() -> void = 0;
         virtual auto endFrame() -> void   = 0;
 

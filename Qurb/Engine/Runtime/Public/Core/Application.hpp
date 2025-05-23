@@ -10,6 +10,8 @@
 
 namespace qurb
 {
+    class Engine;
+
     /// \brief Descriptor for an application.
     struct QURB_API ApplicationDescriptor
     {
@@ -19,6 +21,8 @@ namespace qurb
     /// \brief Base class for all applications.
     class QURB_API Application
     {
+        friend class Engine;
+
     public:
         explicit Application(const ApplicationDescriptor& descriptor);
         virtual ~Application() = default;
@@ -28,20 +32,22 @@ namespace qurb
         virtual auto shutdown() -> void   = 0;
 
         virtual auto update(float32 deltaTime) -> void = 0;
+        virtual auto render() -> void                  = 0;
 
     public:
-        [[nodiscard]] auto descriptor() const -> const ApplicationDescriptor&;
+        [[nodiscard]] auto name() const -> const std::string&;
 
     protected:
-        ApplicationDescriptor _descriptor;
+        std::string _name;
+        Engine*     _engine;
     };
 
     inline Application::Application(const ApplicationDescriptor& descriptor)
-        : _descriptor(descriptor)
+        : _name(descriptor.name)
     {}
 
-    inline auto Application::descriptor() const -> const ApplicationDescriptor&
+    inline auto Application::name() const -> const std::string&
     {
-        return _descriptor;
+        return _name;
     }
 }

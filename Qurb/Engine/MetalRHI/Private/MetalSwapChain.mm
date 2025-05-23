@@ -21,12 +21,16 @@ namespace qurb::rhi::metal
         [_layer setMaximumDrawableCount:3];
         [_layer setPixelFormat:_device->colorBackBufferFormat()];
 
+        _renderTarget = static_cast<RenderTarget*>(_device->createRenderTarget({}));
+
         _window.registerEvent<WindowResizeEvent>(bind<&SwapChain::onWindowResize>(this));
     }
 
     SwapChain::~SwapChain()
     {
         _window.unregisterEvent<WindowResizeEvent>(bind<&SwapChain::onWindowResize>(this));
+
+        _renderTarget->release();
 
         _device->release();
         [_layer release];
@@ -37,9 +41,8 @@ namespace qurb::rhi::metal
         _currentDrawable = [_layer nextDrawable];
         auto texture     = [_currentDrawable texture];
 
-        Log::debug("Metal: Drawable ID: {}", _currentDrawable.drawableID);
-
-        return nullptr;
+        _renderTarget->setSwapChainTexture(texture, _device->colorBackBufferFormat());
+        return _renderTarget;
     }
 
     auto SwapChain::present(id<MTLCommandBuffer> commandBuffer) -> void

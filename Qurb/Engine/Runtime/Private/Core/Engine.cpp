@@ -10,6 +10,8 @@ namespace qurb
         , _isRunning(false)
         , _isSuspended(true)
     {
+        _application->_engine = this;
+
         // Plugins to load, should be parsed from a config file.
         const auto pluginsToLoad = Vector<std::string_view> {
             "QurbMetalRHI",
@@ -53,6 +55,7 @@ namespace qurb
             deltaTime = _clock.deltaTime();
 
             _application->update(deltaTime);
+            _application->render();
 
             // Destroy window that should be closed
             destroyClosedWindows();
@@ -63,7 +66,7 @@ namespace qurb
     auto Engine::createWindow() -> void
     {
         const auto windowDescriptor = WindowDescriptor {
-            .title = _application->descriptor().name,
+            .title = _application->name(),
             .size  = math::Vector2f(1280.0f, 720.0f),
         };
 

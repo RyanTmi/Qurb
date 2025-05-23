@@ -25,6 +25,8 @@ namespace qurb::rhi::metal
         ~RenderContext() override;
 
     public:
+        auto swapChain() -> SwapChain* override;
+
         auto beginFrame() -> void override;
         auto endFrame() -> void override;
 
@@ -50,4 +52,9 @@ namespace qurb::rhi::metal
         id<MTLRenderCommandEncoder> _renderCommandEncoder;
         dispatch_semaphore_t        _frameBoundarySemaphore;
     };
+
+    inline auto RenderContext::swapChain() -> SwapChain*
+    {
+        return _swapChain;
+    }
 }

@@ -15,16 +15,11 @@ namespace qurb::rhi::metal
         _device->retain();
 
         _swapChain = static_cast<SwapChain*>(_device->createSwapChain(descriptor.swapChainDescriptor));
-
-        _commandBuffer = [_device->commandQueue() commandBuffer];
-
-        ensure(_commandBuffer != nil, "Failed to create command buffer.");
     }
 
     RenderContext::~RenderContext()
     {
-        [_commandBuffer release];
-
+        _swapChain->release();
         _device->release();
     }
 
@@ -34,7 +29,8 @@ namespace qurb::rhi::metal
 
         dispatch_semaphore_wait(_frameBoundarySemaphore, DISPATCH_TIME_FOREVER);
 
-        _framePool = [[NSAutoreleasePool alloc] init];
+        _framePool     = [[NSAutoreleasePool alloc] init];
+        _commandBuffer = [_device->commandQueue() commandBuffer];
     }
 
     auto RenderContext::endFrame() -> void
@@ -43,6 +39,7 @@ namespace qurb::rhi::metal
 
         [_commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> _Nonnull) { dispatch_semaphore_signal(_frameBoundarySemaphore); }];
         [_commandBuffer commit];
+        _commandBuffer = nil;
 
         [_framePool release];
         _framePool = nil;

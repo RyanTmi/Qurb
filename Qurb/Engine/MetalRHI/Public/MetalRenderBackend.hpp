@@ -4,6 +4,8 @@
 
 #include <RHI/RenderBackend.hpp>
 
+#import <Foundation/Foundation.h>
+
 namespace qurb::rhi::metal
 {
     /// \brief The `RenderBackend` class.
@@ -13,12 +15,26 @@ namespace qurb::rhi::metal
         using base = rhi::RenderBackend;
 
     public:
-        ~RenderBackend() override = default;
+        RenderBackend();
+        ~RenderBackend() override;
 
     public:
         auto type() const -> RenderBackendType override;
         auto createDevice() const -> rhi::Device* override;
+
+    private:
+        NSAutoreleasePool* _autoreleasePool;
     };
+
+    inline RenderBackend::RenderBackend()
+        // : _autoreleasePool([[NSAutoreleasePool alloc] init])
+        : _autoreleasePool(nil)
+    {}
+
+    inline RenderBackend::~RenderBackend()
+    {
+        // [_autoreleasePool release];
+    }
 
     inline auto RenderBackend::type() const -> RenderBackendType
     {
