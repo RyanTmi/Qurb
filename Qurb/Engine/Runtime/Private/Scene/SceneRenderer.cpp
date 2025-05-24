@@ -14,10 +14,11 @@ namespace qurb
         auto swapChain    = renderContext->swapChain();
         auto renderTarget = swapChain->nextRenderTarget();
 
-        // Begin the render pass.
+        // Geometry render pass.
         renderContext->beginRenderPass(renderTarget, renderPassDescriptor);
 
-        // End the render pass.
+        // Render all renderable objects in the scene here.
+
         renderContext->endRenderPass();
     }
 }

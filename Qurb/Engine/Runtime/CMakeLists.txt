@@ -31,6 +31,9 @@ set(PUBLIC_HEADERS
     Public/RHI/SwapChain.hpp
     Public/RHI/Texture.hpp
 
+    Public/Scene/Components.hpp
+    Public/Scene/Entity.hpp
+    Public/Scene/EntityRegistery.hpp
     Public/Scene/Scene.hpp
     Public/Scene/SceneRenderer.hpp
 
@@ -48,6 +51,7 @@ set(PRIVATE_SOURCES
     Private/Renderer/Renderer.cpp
     Private/Renderer/Color.cpp
 
+    Private/Scene/EntityRegistery.cpp
     Private/Scene/Scene.cpp
     Private/Scene/SceneRenderer.cpp
 )

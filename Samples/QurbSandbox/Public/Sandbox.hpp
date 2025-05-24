@@ -30,6 +30,5 @@ private:
 inline SandboxApplication::SandboxApplication(const ApplicationDescriptor& descriptor)
     : Application(descriptor)
     , _renderContext(nullptr)
-    , _scene()
     , _sceneRenderer(_scene)
 {}
