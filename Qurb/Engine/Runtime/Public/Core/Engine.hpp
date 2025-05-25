@@ -7,6 +7,7 @@
 #include "Misc/Clock.hpp"
 #include "Platform/Platform.hpp"
 #include "Platform/Window.hpp"
+#include "Plugins/PluginManager.hpp"
 #include "Renderer/Renderer.hpp"
 
 #include <list>
@@ -21,6 +22,7 @@ namespace qurb
     {
     public:
         auto activeWindow() -> Window&;
+        auto renderer() -> Renderer&;
 
     private:
         friend auto ::main(int argc, const char** argv) -> int;
@@ -34,8 +36,9 @@ namespace qurb
         auto onWindowResize(const WindowResizeEvent& e) -> bool;
 
     private:
-        Platform _platform;
-        Renderer _renderer;
+        Platform      _platform;
+        Renderer      _renderer;
+        PluginManager _pluginManager;
 
         std::list<Window>            _windows;
         std::unique_ptr<Application> _application;
@@ -49,5 +52,10 @@ namespace qurb
     {
         // TODO: Multi window support
         return _windows.front();
+    }
+
+    inline auto Engine::renderer() -> Renderer&
+    {
+        return _renderer;
     }
 }

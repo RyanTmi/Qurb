@@ -6,6 +6,7 @@
 #include "Delegates/Delegate.hpp"
 #include "Events/Event.hpp"
 
+#include <algorithm>
 #include <type_traits>
 
 namespace qurb
@@ -26,6 +27,7 @@ namespace qurb
 
     public:
         auto registerListener(Listener listener) -> void;
+        auto unregisterListener(Listener listener) -> void;
         auto unregisterAllListeners() -> void;
 
         template <typename... Args>
@@ -41,6 +43,13 @@ namespace qurb
     auto EventDispatcher<E>::registerListener(Listener listener) -> void
     {
         _listeners.pushBack(listener);
+    }
+
+    template <Dispatchable E>
+    auto EventDispatcher<E>::unregisterListener(Listener listener) -> void
+    {
+        auto res = std::ranges::remove_if(_listeners, [&listener](const Listener& l) { return l == listener; });
+        _listeners.erase(res.begin(), res.end());
     }
 
     template <Dispatchable E>

@@ -14,7 +14,28 @@ set(PUBLIC_HEADERS
     Public/Platform/Window.hpp
     Public/Platform/MacOS/NativeWindow.hpp
 
+    Public/Plugins/Plugin.hpp
+    Public/Plugins/PluginManager.hpp
+
     Public/Renderer/Renderer.hpp
+
+    Public/RHI/Buffer.hpp
+    Public/RHI/Device.hpp
+    Public/RHI/PipelineState.hpp
+    Public/RHI/Plugin.hpp
+    Public/RHI/RenderBackend.hpp
+    Public/RHI/RenderContext.hpp
+    Public/RHI/RenderPass.hpp
+    Public/RHI/RenderTarget.hpp
+    Public/RHI/ShaderProgram.hpp
+    Public/RHI/SwapChain.hpp
+    Public/RHI/Texture.hpp
+
+    Public/Scene/Components.hpp
+    Public/Scene/Entity.hpp
+    Public/Scene/EntityRegistery.hpp
+    Public/Scene/Scene.hpp
+    Public/Scene/SceneRenderer.hpp
 
     Public/EntryPoint.hpp
 )
@@ -23,8 +44,16 @@ set(PRIVATE_HEADERS
 )
 
 set(PRIVATE_SOURCES
-    Private/Core/Application.cpp
     Private/Core/Engine.cpp
+
+    Private/Plugins/PluginManager.cpp
+
+    Private/Renderer/Renderer.cpp
+    Private/Renderer/Color.cpp
+
+    Private/Scene/EntityRegistery.cpp
+    Private/Scene/Scene.cpp
+    Private/Scene/SceneRenderer.cpp
 )
 
 if(APPLE)

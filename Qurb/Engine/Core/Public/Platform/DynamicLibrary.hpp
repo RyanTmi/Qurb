@@ -23,8 +23,12 @@ namespace qurb
         DynamicLibrary(const DynamicLibrary&)                    = delete;
         auto operator=(const DynamicLibrary&) -> DynamicLibrary& = delete;
 
+        DynamicLibrary(DynamicLibrary&& other) noexcept;
+        auto operator=(DynamicLibrary&& other) noexcept -> DynamicLibrary&;
+
     public:
         [[nodiscard]] auto isOpen() const -> bool;
+        [[nodiscard]] auto name() const -> std::string_view;
 
         auto load(std::string_view name) -> void;
         auto unload() -> void;
@@ -48,6 +52,11 @@ namespace qurb
     inline auto DynamicLibrary::isOpen() const -> bool
     {
         return _nativeHandle != nullptr;
+    }
+
+    inline auto DynamicLibrary::name() const -> std::string_view
+    {
+        return _name;
     }
 
     template <typename T>
