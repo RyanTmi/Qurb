@@ -14,6 +14,13 @@ set(PUBLIC_HEADERS
 
     Public/Log/Log.hpp
 
+    Public/Math/Matrix4x4.hpp
+    Public/Math/Quaternion.hpp
+    Public/Math/TypeTraits.hpp
+    Public/Math/Vector2.hpp
+    Public/Math/Vector3.hpp
+    Public/Math/Vector4.hpp
+
     Public/Platform/Console.hpp
     Public/Platform/Detection.hpp
     Public/Platform/DynamicLibrary.hpp

@@ -5,6 +5,7 @@
 #include "Platform/MacOS/NativeWindow.hpp"
 #include "Platform/MacOS/View.hpp"
 #include "Platform/MacOS/WindowDelegate.hpp"
+#include "RHI/RenderContext.hpp"
 
 #import <AppKit/AppKit.h>
 #import <QuartzCore/QuartzCore.h>
@@ -13,11 +14,14 @@ namespace qurb
 {
     Window::Window(const WindowDescriptor& descriptor)
         : _nativeHandle(std::make_unique<NativeHandle>())
+        , _renderContext(nullptr)
+        , _title(descriptor.title)
+        , _size(descriptor.size)
         , _shouldClose(false)
     {
         @autoreleasepool
         {
-            NSRect contentRect = NSMakeRect(0, 0, 1280, 720);
+            NSRect contentRect = NSMakeRect(0, 0, _size.x, _size.y);
             // TODO: Handle window style using the descriptor
             NSUInteger styleMask = NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
 
@@ -36,7 +40,7 @@ namespace qurb
             [window setDelegate:delegate];
             [window setContentView:view];
             [window setAcceptsMouseMovedEvents:YES];
-            [window setTitle:@(descriptor.name.data())];
+            [window setTitle:@(_title.data())];
             [window setMinSize:NSMakeSize(540, 360)];
             [window setLevel:NSNormalWindowLevel];
             [window center];
@@ -73,6 +77,11 @@ namespace qurb
             [_nativeHandle->view release];
             [_nativeHandle->delegate release];
             [_nativeHandle->window release];
+        }
+
+        if (_renderContext)
+        {
+            _renderContext->release();
         }
 
         Log::trace("Window destroyed");

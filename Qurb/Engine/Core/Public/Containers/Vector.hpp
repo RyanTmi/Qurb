@@ -86,6 +86,9 @@ namespace qurb
 
         constexpr auto clear() noexcept -> void;
 
+        constexpr auto erase(const T* first, const T* last) noexcept -> T*;
+        constexpr auto erase(const T* pos) noexcept -> T*;
+
         constexpr auto pushBack(const T& value) noexcept -> void;
         constexpr auto pushBack(T&& value) noexcept -> void;
 
@@ -98,7 +101,7 @@ namespace qurb
         constexpr auto resize(usize size, const T& value) noexcept -> void;
 
     private:
-        static constexpr float32 growthFactor = 1.5f;
+        static constexpr auto growthFactor = 1.5f;
 
         auto realloc(usize capacity) -> void;
 
@@ -118,10 +121,6 @@ namespace qurb
 
     template <typename T>
     inline constexpr bool isVectorV = IsVector<T>::value;
-
-    //------------------------------------------------------------------------------------------------------------------
-    // Constructors
-    //------------------------------------------------------------------------------------------------------------------
 
     template <typename T>
     constexpr Vector<T>::Vector() noexcept
@@ -232,10 +231,6 @@ namespace qurb
         return *this;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Element access
-    //------------------------------------------------------------------------------------------------------------------
-
     template <typename T>
     constexpr auto Vector<T>::at(usize index) -> T&
     {
@@ -304,10 +299,6 @@ namespace qurb
         return _data;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Iterators
-    //------------------------------------------------------------------------------------------------------------------
-
     template <typename T>
     constexpr auto Vector<T>::begin() noexcept -> T*
     {
@@ -344,10 +335,6 @@ namespace qurb
         return _data + _size;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Capacity
-    //------------------------------------------------------------------------------------------------------------------
-
     template <typename T>
     constexpr auto Vector<T>::empty() const noexcept -> bool
     {
@@ -375,10 +362,6 @@ namespace qurb
         }
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    // Modifiers
-    //------------------------------------------------------------------------------------------------------------------
-
     template <typename T>
     constexpr auto Vector<T>::clear() noexcept -> void
     {
@@ -388,6 +371,38 @@ namespace qurb
         }
 
         _size = 0;
+    }
+
+    template <typename T>
+    constexpr auto Vector<T>::erase(const T* first, const T* last) noexcept -> T*
+    {
+        // Compute iterators into our buffer.
+        auto write = begin() + (first - _data);
+        auto read  = begin() + (last - _data);
+        auto itEnd = end();
+
+        // Shift the elements after [first,last) down to `write`.
+        for (; read != itEnd; ++read, ++write)
+        {
+            *write = std::move(*read);
+        }
+
+        // Destroy the now-unused tail elements.
+        auto newSize = write - begin();
+        for (auto destroyIt = begin() + newSize; destroyIt != itEnd; ++destroyIt)
+        {
+            destroyIt->~T();
+        }
+
+        _size = newSize;
+        return begin() + (first - _data);
+    }
+
+    template <typename T>
+    constexpr auto Vector<T>::erase(const T* pos) noexcept -> T*
+    {
+        auto idx = pos - _data;
+        return erase(begin() + idx, begin() + idx + 1);
     }
 
     template <typename T>
@@ -465,10 +480,6 @@ namespace qurb
         }
         _size = size;
     }
-
-    //------------------------------------------------------------------------------------------------------------------
-    // Private
-    //------------------------------------------------------------------------------------------------------------------
 
     template <typename T>
     auto Vector<T>::realloc(usize capacity) -> void

@@ -1,16 +1,31 @@
 #include "Core/Engine.hpp"
 
+#include "Containers/Vector.hpp"
+#include "Log/Log.hpp"
+
 namespace qurb
 {
     Engine::Engine(Application* application)
-        : _platform()
-        , _renderer()
-        , _application(application)
+        : _application(application)
         , _isRunning(false)
-        , _isSuspended(false)
+        , _isSuspended(true)
     {
+        _application->_engine = this;
+
+        // Plugins to load, should be parsed from a config file.
+        const auto pluginsToLoad = Vector<std::string_view> {
+            "QurbMetalRHI",
+        };
+        _pluginManager.loadPlugins(pluginsToLoad);
+
+        _renderer.loadBackend(_pluginManager, "QurbMetalRHI");
+
         createWindow();
 
+        // Initialize the plugins.
+        _pluginManager.initializePlugins();
+
+        // Initialize the application.
         _application->initialize();
     }
 
@@ -40,6 +55,7 @@ namespace qurb
             deltaTime = _clock.deltaTime();
 
             _application->update(deltaTime);
+            _application->render();
 
             // Destroy window that should be closed
             destroyClosedWindows();
@@ -50,11 +66,14 @@ namespace qurb
     auto Engine::createWindow() -> void
     {
         const auto windowDescriptor = WindowDescriptor {
-            .name = _application->descriptor().name,
+            .title = _application->name(),
+            .size  = math::Vector2f(1280.0f, 720.0f),
         };
 
         auto& window = _windows.emplace_back(windowDescriptor);
-        window.listenEvent<WindowResizeEvent>(bind<&Engine::onWindowResize>(this));
+        window.registerEvent<WindowResizeEvent>(bind<&Engine::onWindowResize>(this));
+
+        _renderer.onWindowCreate(window);
     }
 
     auto Engine::destroyClosedWindows() -> void
@@ -75,7 +94,9 @@ namespace qurb
     auto Engine::onWindowResize(const WindowResizeEvent& e) -> bool
     {
         // TODO: Handle multiple windows
-        _isSuspended = e.width == 0 or e.height == 0;
+        const auto [width, height] = e.window.size();
+
+        _isSuspended = width == 0 or height == 0;
 
         return false;
     }
