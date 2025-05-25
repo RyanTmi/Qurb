@@ -125,7 +125,14 @@ auto SandboxApplication::shutdown() -> void
     Log::info("{} shutdown", _name);
 }
 
-auto SandboxApplication::update(float32 deltaTime) -> void {}
+auto SandboxApplication::update(float32 deltaTime) -> void
+{
+    for (auto& entity : _scene.entities())
+    {
+        auto& transformComponent = entity.getComponent<TransformComponent>();
+        transformComponent.eulerAngles.z = 45.0;
+    }
+}
 
 auto SandboxApplication::render() -> void
 {

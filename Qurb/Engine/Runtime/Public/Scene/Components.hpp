@@ -23,9 +23,9 @@ namespace qurb
 
     struct QURB_API TransformComponent
     {
-        math::Vector3f position = math::Vector3f::zero;
-        math::Vector3f rotation = math::Vector3f::zero;
-        math::Vector3f scale    = math::Vector3f::one;
+        math::Vector3f position    = math::Vector3f::zero;
+        math::Vector3f eulerAngles = math::Vector3f::zero;
+        math::Vector3f scale       = math::Vector3f::one;
 
     public:
         TransformComponent() = default;
@@ -41,7 +41,7 @@ namespace qurb
     {
         _transform = translationMatrix(position);
         _transform *= scaleMatrix(scale);
-        _transform *= rotationMatrix(rotation);
+        _transform *= rotationMatrix(eulerAngles);
         return _transform;
     }
 
