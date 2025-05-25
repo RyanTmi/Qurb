@@ -23,9 +23,9 @@ namespace qurb
 
     struct QURB_API TransformComponent
     {
-        math::Vector3f position;
-        math::Vector3f rotation;
-        math::Vector3f scale;
+        math::Vector3f position = math::Vector3f::zero;
+        math::Vector3f rotation = math::Vector3f::zero;
+        math::Vector3f scale    = math::Vector3f::one;
 
     public:
         TransformComponent() = default;
@@ -49,7 +49,7 @@ namespace qurb
     {
         rhi::Buffer* vertexBuffer;
         rhi::Buffer* indexBuffer;
-        uint32       indexCount;
+        uint32       vertexCount;
 
     public:
         MeshComponent() = default;

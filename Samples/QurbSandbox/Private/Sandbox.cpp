@@ -7,6 +7,8 @@
 #include <Scene/Components.hpp>
 #include <Scene/Entity.hpp>
 
+#include <ranges>
+
 using namespace qurb;
 
 struct Vertex3d
@@ -45,19 +47,30 @@ auto SandboxApplication::initialize() -> void
 
     auto vertices = quadVertices();
 
-    const auto entityCount = 1;
+    constexpr auto entityCount = 4;
+
+    auto positions = Vector<math::Vector3f> {
+        {-1.0f, -1.0f, 0.0f},
+        {1.0f,  -1.0f, 0.0f},
+        {1.0f,  1.0f,  0.0f},
+        {-1.0f, 1.0f,  0.0f},
+    };
+
     for (int i = 0; i < entityCount; ++i)
     {
         _scene.createEntity();
     }
 
-    for (auto& entity : _scene.entities())
+    for (int i = 0; i < entityCount; ++i)
     {
+        auto& entity = _scene.entities()[i];
+
         auto& transformComponent = entity.addComponent<TransformComponent>();
         auto& meshComponent      = entity.addComponent<MeshComponent>();
         auto& materialComponent  = entity.addComponent<MaterialComponent>();
 
-        Log::debug("{}", entity.hasComponents<TransformComponent, MeshComponent, MaterialComponent>());
+        transformComponent.position = positions[i] / 2.0f;
+        transformComponent.scale    = {.25f, .25f, 1.0f};
 
         meshComponent.vertexBuffer = _device->createBuffer(
             rhi::BufferDescriptor {
@@ -66,7 +79,7 @@ auto SandboxApplication::initialize() -> void
                 .bufferUsage = rhi::BufferUsage::Immutable,
                 .initialData = vertices.data(),
             });
-        meshComponent.indexCount = static_cast<uint32>(vertices.size());
+        meshComponent.vertexCount = static_cast<uint32>(vertices.size());
 
         rhi::ShaderProgramDescriptor shaderProgramDescriptor;
         shaderProgramDescriptor.shaderName           = "Object.Builtin";

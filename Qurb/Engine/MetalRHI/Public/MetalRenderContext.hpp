@@ -35,6 +35,8 @@ namespace qurb::rhi::metal
         auto beginRenderPass(rhi::RenderTarget* renderTarget, const RenderPassDescriptor& descriptor) -> void override;
         auto endRenderPass() -> void override;
 
+        auto pushConstants(const void* data, usize size) -> void override;
+
         auto bindPipelineState(rhi::PipelineState* pipelineState) -> void override;
 
         auto bindVertexBuffer(rhi::Buffer* vertexBuffer, uint32 slot, uint32 offset) -> void override;

@@ -31,8 +31,9 @@ namespace qurb
             auto [transformComponent, meshComponent, materialComponent] = components;
 
             renderContext->bindPipelineState(materialComponent.pipelineState);
+            renderContext->pushConstants(&transformComponent.transformMatrix(), sizeof(math::Matrix4x4f));
             renderContext->bindVertexBuffer(meshComponent.vertexBuffer, 0, 0);
-            renderContext->draw(meshComponent.indexCount, 0);
+            renderContext->draw(meshComponent.vertexCount, 0);
         }
 
         renderContext->endRenderPass();
