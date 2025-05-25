@@ -7,6 +7,7 @@
 #include "Log/Log.hpp"
 
 #include <format>
+#include <tuple>
 #include <unordered_set>
 #include <vector>
 
@@ -53,14 +54,19 @@ namespace qurb
         template <typename T>
         auto getComponent(EntityId id) -> T&;
 
+        template <typename... Ts>
+        auto getComponents(EntityId id) -> std::tuple<Ts&...>;
+
         template <typename T>
         auto removeComponent(EntityId id) -> void;
 
         template <typename T>
         auto hasComponent(EntityId id) -> bool;
 
-        // private:
-    public:
+        template <typename... Ts>
+        auto hasComponents(EntityId id) -> bool;
+
+    private:
         class Component
         {
         public:
@@ -155,6 +161,12 @@ namespace qurb
         return _componentPools[componentId].template at<T>(id);
     }
 
+    template <typename... Ts>
+    auto EntityRegistery::getComponents(EntityId id) -> std::tuple<Ts&...>
+    {
+        return std::tuple<Ts&...> {getComponent<Ts>(id)...};
+    }
+
     template <typename T>
     auto EntityRegistery::removeComponent(EntityId id) -> void
     {
@@ -185,6 +197,12 @@ namespace qurb
         }
 
         return entityMask[componentId];
+    }
+
+    template <typename... Ts>
+    auto EntityRegistery::hasComponents(EntityId id) -> bool
+    {
+        return (hasComponent<Ts>(id) && ...);
     }
 }
 

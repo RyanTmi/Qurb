@@ -2,6 +2,7 @@
 
 #include <Core/Application.hpp>
 #include <CoreMinimal.hpp>
+#include <RHI/Device.hpp>
 #include <RHI/RenderContext.hpp>
 #include <Scene/Scene.hpp>
 #include <Scene/SceneRenderer.hpp>
@@ -22,6 +23,7 @@ public:
     auto render() -> void override;
 
 private:
+    rhi::Device*        _device;
     rhi::RenderContext* _renderContext;
     Scene               _scene;
     SceneRenderer       _sceneRenderer;
@@ -29,6 +31,7 @@ private:
 
 inline SandboxApplication::SandboxApplication(const ApplicationDescriptor& descriptor)
     : Application(descriptor)
+    , _device(nullptr)
     , _renderContext(nullptr)
     , _sceneRenderer(_scene)
 {}

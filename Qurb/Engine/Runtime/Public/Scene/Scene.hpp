@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Containers/Vector.hpp"
+#include "Scene/Entity.hpp"
 #include "Scene/EntityRegistery.hpp"
 
 namespace qurb
@@ -16,9 +18,19 @@ namespace qurb
         auto operator=(Scene&&) -> Scene&      = delete;
 
     public:
+        auto createEntity() -> Entity
+        {
+            auto entity = _entityRegistery.createEntity();
+            _entities.pushBack(entity);
+            return entity;
+        }
+
         auto registery() -> EntityRegistery& { return _entityRegistery; }
+
+        auto entities() -> Vector<Entity>& { return _entities; }
 
     private:
         EntityRegistery _entityRegistery;
+        Vector<Entity>  _entities;
     };
 }

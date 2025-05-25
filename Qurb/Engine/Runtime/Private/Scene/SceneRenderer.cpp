@@ -1,13 +1,14 @@
 #include "Scene/SceneRenderer.hpp"
 
 #include "Log/Log.hpp"
+#include "Scene/Components.hpp"
 
 namespace qurb
 {
     auto SceneRenderer::render(rhi::RenderContext* renderContext) -> void
     {
         static auto renderPassDescriptor = rhi::RenderPassDescriptor {
-            .clearColor = Color::purple,
+            .clearColor = Color::black,
         };
 
         // Get the swap chain.
@@ -18,6 +19,21 @@ namespace qurb
         renderContext->beginRenderPass(renderTarget, renderPassDescriptor);
 
         // Render all renderable objects in the scene here.
+        for (auto& entity : _scene.entities())
+        {
+            if (not entity.hasComponents<TransformComponent, MeshComponent, MaterialComponent>())
+            {
+                continue;
+            }
+
+            auto components = entity.getComponents<TransformComponent, MeshComponent, MaterialComponent>();
+
+            auto [transformComponent, meshComponent, materialComponent] = components;
+
+            renderContext->bindPipelineState(materialComponent.pipelineState);
+            renderContext->bindVertexBuffer(meshComponent.vertexBuffer, 0, 0);
+            renderContext->draw(meshComponent.indexCount, 0);
+        }
 
         renderContext->endRenderPass();
     }

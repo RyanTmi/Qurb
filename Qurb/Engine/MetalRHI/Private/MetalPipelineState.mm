@@ -36,8 +36,8 @@ namespace qurb::rhi::metal
         }
 
         // TODO: To be removed
-        [depthStencilDescriptor setDepthWriteEnabled:YES];
-        [depthStencilDescriptor setDepthCompareFunction:MTLCompareFunctionLessEqual];
+        // [depthStencilDescriptor setDepthWriteEnabled:YES];
+        // [depthStencilDescriptor setDepthCompareFunction:MTLCompareFunctionLessEqual];
 
         if (_descriptor.depthStencil.stencilTestEnabled)
         {
@@ -51,13 +51,13 @@ namespace qurb::rhi::metal
             [backFaceStencil release];
         }
 
-        _depthStencilState = [_device->handle() newDepthStencilStateWithDescriptor:depthStencilDescriptor];
+        // _depthStencilState = [_device->handle() newDepthStencilStateWithDescriptor:depthStencilDescriptor];
         [depthStencilDescriptor release];
     }
 
     PipelineState::~PipelineState()
     {
-        [_depthStencilState release];
+        // [_depthStencilState release];
         [_renderPipelineState release];
 
         _device->release();
@@ -72,13 +72,13 @@ namespace qurb::rhi::metal
 
         _renderPipelineState = createPipelineState(renderTarget);
         [renderCommandEncoder setRenderPipelineState:_renderPipelineState];
-        [renderCommandEncoder setDepthStencilState:_depthStencilState];
+        // [renderCommandEncoder setDepthStencilState:_depthStencilState];
 
         // [renderCommandEncoder setStencilReferenceValue:stencilReference_];
-        [renderCommandEncoder setFrontFacingWinding:_winding];
-        [renderCommandEncoder setCullMode:_cullMode];
-        [renderCommandEncoder setDepthBias:_depthBias slopeScale:_slopeScale clamp:_depthBiasClamp];
-        [renderCommandEncoder setDepthClipMode:_depthClipMode];
+        // [renderCommandEncoder setFrontFacingWinding:_winding];
+        // [renderCommandEncoder setCullMode:_cullMode];
+        // [renderCommandEncoder setDepthBias:_depthBias slopeScale:_slopeScale clamp:_depthBiasClamp];
+        // [renderCommandEncoder setDepthClipMode:_depthClipMode];
     }
 
     auto PipelineState::createPipelineState(RenderTarget* renderTarget) -> id<MTLRenderPipelineState>

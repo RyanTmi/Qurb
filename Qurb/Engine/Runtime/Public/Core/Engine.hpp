@@ -22,6 +22,7 @@ namespace qurb
     {
     public:
         auto activeWindow() -> Window&;
+        auto renderer() -> Renderer&;
 
     private:
         friend auto ::main(int argc, const char** argv) -> int;
@@ -51,5 +52,10 @@ namespace qurb
     {
         // TODO: Multi window support
         return _windows.front();
+    }
+
+    inline auto Engine::renderer() -> Renderer&
+    {
+        return _renderer;
     }
 }

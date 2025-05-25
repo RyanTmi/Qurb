@@ -6,6 +6,7 @@
 #include "Scene/EntityRegistery.hpp"
 
 #include <limits>
+#include <tuple>
 
 namespace qurb
 {
@@ -24,8 +25,14 @@ namespace qurb
         template <typename T>
         auto getComponent() -> T&;
 
+        template <typename... Ts>
+        auto getComponents() -> std::tuple<Ts&...>;
+
         template <typename T>
         auto hasComponent() -> bool;
+
+        template <typename... Ts>
+        auto hasComponents() -> bool;
 
         template <typename T>
         auto removeComponent() -> void;
@@ -54,10 +61,22 @@ namespace qurb
         return _registery.getComponent<T>(_id);
     }
 
+    template <typename... Ts>
+    auto Entity::getComponents() -> std::tuple<Ts&...>
+    {
+        return _registery.getComponents<Ts...>(_id);
+    }
+
     template <typename T>
     auto Entity::hasComponent() -> bool
     {
         return _registery.hasComponent<T>(_id);
+    }
+
+    template <typename... Ts>
+    auto Entity::hasComponents() -> bool
+    {
+        return _registery.hasComponents<Ts...>(_id);
     }
 
     template <typename T>
