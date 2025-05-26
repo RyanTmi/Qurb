@@ -10,11 +10,13 @@
 
 namespace qurb
 {
+    constexpr auto invalidEntityId = std::numeric_limits<EntityId>::max();
+
     // \brief The `Entity` class.
     class QURB_API Entity final
     {
     public:
-        Entity(EntityId id, EntityRegistery& registery);
+        Entity(EntityRegistery& registery, EntityId id = invalidEntityId);
 
     public:
         [[nodiscard]] auto id() const -> EntityId { return _id; }
@@ -38,15 +40,13 @@ namespace qurb
         auto removeComponent() -> void;
 
     private:
-        EntityId         _id;
         EntityRegistery& _registery;
+        EntityId         _id;
     };
 
-    constexpr auto invalidEntityId = std::numeric_limits<EntityId>::max();
-
-    inline Entity::Entity(EntityId id, EntityRegistery& registery)
-        : _id(id)
-        , _registery(registery)
+    inline Entity::Entity(EntityRegistery& registery, EntityId id)
+        : _registery(registery)
+        , _id(id)
     {}
 
     template <typename T, typename... Args>

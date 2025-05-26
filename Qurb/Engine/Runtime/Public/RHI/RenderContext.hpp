@@ -45,6 +45,8 @@ namespace qurb::rhi
         virtual auto beginRenderPass(RenderTarget* renderTarget, const RenderPassDescriptor& descriptor = {}) -> void = 0;
         virtual auto endRenderPass() -> void                                                                          = 0;
 
+        virtual auto pushConstants(const void* data, usize size) -> void = 0;
+
         virtual auto bindPipelineState(PipelineState* pipelineState) -> void = 0;
 
         virtual auto bindVertexBuffer(Buffer* vertexBuffer, uint32 slot, uint32 offset) -> void = 0;

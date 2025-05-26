@@ -19,20 +19,33 @@ namespace qurb
         renderContext->beginRenderPass(renderTarget, renderPassDescriptor);
 
         // Render all renderable objects in the scene here.
-        for (auto& entity : _scene.entities())
+        for (auto& entity : _scene._entities)
         {
-            if (not entity.hasComponents<TransformComponent, MeshComponent, MaterialComponent>())
+            auto& transformComponent = entity.getComponent<TransformComponent>();
+
+            const auto& transformMatrix = transformComponent.transformMatrix();
+
+            if (entity.hasComponent<CameraComponent>())
             {
-                continue;
+                auto& cameraComponent = entity.getComponent<CameraComponent>();
+
+                auto* data = _sceneConstantsBuffer->map<math::Matrix4x4f>();
+                data[0]    = transformMatrix.inverse();
+                data[1]    = cameraComponent.projection();
+                _sceneConstantsBuffer->unmap();
+
+                renderContext->bindVertexBuffer(_sceneConstantsBuffer, 2, 0);
             }
 
-            auto components = entity.getComponents<TransformComponent, MeshComponent, MaterialComponent>();
+            if (entity.hasComponents<MeshComponent, MaterialComponent>())
+            {
+                auto [meshComponent, materialComponent] = entity.getComponents<MeshComponent, MaterialComponent>();
 
-            auto [transformComponent, meshComponent, materialComponent] = components;
-
-            renderContext->bindPipelineState(materialComponent.pipelineState);
-            renderContext->bindVertexBuffer(meshComponent.vertexBuffer, 0, 0);
-            renderContext->draw(meshComponent.indexCount, 0);
+                renderContext->bindPipelineState(materialComponent.pipelineState);
+                renderContext->pushConstants(&transformMatrix, sizeof(math::Matrix4x4f));
+                renderContext->bindVertexBuffer(meshComponent.vertexBuffer, 0, 0);
+                renderContext->draw(meshComponent.vertexCount, 0);
+            }
         }
 
         renderContext->endRenderPass();
