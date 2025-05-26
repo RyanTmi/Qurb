@@ -72,6 +72,12 @@ namespace qurb::rhi::metal
         _currentRenderTarget = nullptr;
     }
 
+    auto RenderContext::pushConstants(const void* data, usize size) -> void
+    {
+        // NOTE: Assume index = 1 for now
+        [_renderCommandEncoder setVertexBytes:data length:size atIndex:1];
+    }
+
     auto RenderContext::bindPipelineState(rhi::PipelineState* pipelineState) -> void
     {
         ensure(_renderCommandEncoder != nil, "Render command encoder is nil.");

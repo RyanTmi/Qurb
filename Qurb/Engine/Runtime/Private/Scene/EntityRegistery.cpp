@@ -19,6 +19,6 @@ namespace qurb
             _freeEntities.erase(entityId);
         }
 
-        return Entity(entityId, *this);
+        return Entity(*this, entityId);
     }
 }

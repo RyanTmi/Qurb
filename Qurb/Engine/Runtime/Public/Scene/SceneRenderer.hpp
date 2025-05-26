@@ -1,6 +1,9 @@
 #pragma once
 
 #include "CoreDefines.hpp"
+#include "Math/Matrix4x4.hpp"
+#include "RHI/Buffer.hpp"
+#include "RHI/Device.hpp"
 #include "RHI/RenderContext.hpp"
 #include "Scene/Scene.hpp"
 
@@ -9,7 +12,8 @@ namespace qurb
     class QURB_API SceneRenderer
     {
     public:
-        explicit SceneRenderer(Scene& scene);
+        SceneRenderer(Scene& scene, rhi::Device* device);
+        ~SceneRenderer();
 
     public:
         /// \brief Renders the scene.
@@ -17,10 +21,29 @@ namespace qurb
         auto render(rhi::RenderContext* renderContext) -> void;
 
     private:
-        Scene& _scene;
+        Scene&       _scene;
+        rhi::Device* _device;
+        rhi::Buffer* _sceneConstantsBuffer;
     };
 
-    inline SceneRenderer::SceneRenderer(Scene& scene)
+    inline SceneRenderer::SceneRenderer(Scene& scene, rhi::Device* device)
         : _scene(scene)
-    {}
+        , _device(device)
+        , _sceneConstantsBuffer(nullptr)
+    {
+        _device->retain();
+        _sceneConstantsBuffer = _device->createBuffer(
+            rhi::BufferDescriptor {
+                .bufferSize  = 2 * sizeof(math::Matrix4x4f),
+                .bufferType  = rhi::BufferType::Vertex,
+                .bufferUsage = rhi::BufferUsage::Dynamic,
+                .initialData = nullptr,
+            });
+    }
+
+    inline SceneRenderer::~SceneRenderer()
+    {
+        _device->release();
+        _sceneConstantsBuffer->release();
+    }
 }

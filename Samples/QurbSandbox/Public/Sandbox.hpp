@@ -2,6 +2,7 @@
 
 #include <Core/Application.hpp>
 #include <CoreMinimal.hpp>
+#include <Events/WindowEvents.hpp>
 #include <RHI/Device.hpp>
 #include <RHI/RenderContext.hpp>
 #include <Scene/Scene.hpp>
@@ -23,15 +24,22 @@ public:
     auto render() -> void override;
 
 private:
-    rhi::Device*        _device;
-    rhi::RenderContext* _renderContext;
-    Scene               _scene;
-    SceneRenderer       _sceneRenderer;
+    auto onWindowResize(const WindowResizeEvent& event) -> bool;
+
+    auto createQuad() -> void;
+    auto createCamera() -> void;
+
+private:
+    rhi::Device*                   _device;
+    rhi::RenderContext*            _renderContext;
+    std::unique_ptr<Scene>         _scene;
+    std::unique_ptr<SceneRenderer> _sceneRenderer;
 };
 
 inline SandboxApplication::SandboxApplication(const ApplicationDescriptor& descriptor)
     : Application(descriptor)
     , _device(nullptr)
     , _renderContext(nullptr)
-    , _sceneRenderer(_scene)
+    , _scene(nullptr)
+    , _sceneRenderer(nullptr)
 {}
