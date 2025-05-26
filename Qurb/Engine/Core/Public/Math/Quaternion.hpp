@@ -63,12 +63,16 @@ namespace qurb::math
     template <Real T>
     constexpr Quaternion<T>::Quaternion(const Vector3<T>& euler) noexcept
     {
-        auto cx = std::cos(toRadians(euler.x) * 0.5);
-        auto sx = std::sin(toRadians(euler.x) * 0.5);
-        auto cy = std::cos(toRadians(euler.y) * 0.5);
-        auto sy = std::sin(toRadians(euler.y) * 0.5);
-        auto cz = std::cos(toRadians(euler.z) * 0.5);
-        auto sz = std::sin(toRadians(euler.z) * 0.5);
+        const auto rx = toRadians(euler.x) * T(0.5);
+        const auto ry = toRadians(euler.y) * T(0.5);
+        const auto rz = toRadians(euler.z) * T(0.5);
+
+        const auto cx = std::cos(rx);
+        const auto sx = std::sin(rx);
+        const auto cy = std::cos(ry);
+        const auto sy = std::sin(ry);
+        const auto cz = std::cos(rz);
+        const auto sz = std::sin(rz);
 
         _x = sx * cy * cz - cx * sy * sz;
         _y = cx * sy * cz + sx * cy * sz;

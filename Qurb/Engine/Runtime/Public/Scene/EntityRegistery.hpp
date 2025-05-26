@@ -141,7 +141,7 @@ namespace qurb
 
         if (componentId >= _entitiesMask[id].size())
         {
-            _entitiesMask[id].emplace_back(false);
+            _entitiesMask[id].resize(componentId + 1, false);
         }
 
         _entitiesMask[id][componentId] = true;
@@ -155,7 +155,7 @@ namespace qurb
 
         if (not hasComponent<T>(id))
         {
-            throw Exception("Entity does not have the requested component.");
+            throw Exception(std::format("Entity {} does not have the requested component {}.", id, typeid(T).name()));
         }
 
         return _componentPools[componentId].template at<T>(id);

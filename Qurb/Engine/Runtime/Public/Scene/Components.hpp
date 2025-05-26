@@ -8,6 +8,7 @@
 #include "RHI/Buffer.hpp"
 #include "RHI/PipelineState.hpp"
 #include "RHI/ShaderProgram.hpp"
+#include "Scene/Camera.hpp"
 
 namespace qurb
 {
@@ -40,8 +41,8 @@ namespace qurb
     inline auto TransformComponent::transformMatrix() -> const math::Matrix4x4f&
     {
         _transform = translationMatrix(position);
-        _transform *= scaleMatrix(scale);
         _transform *= rotationMatrix(eulerAngles);
+        _transform *= scaleMatrix(scale);
         return _transform;
     }
 
@@ -74,5 +75,17 @@ namespace qurb
         virtual auto start() -> void                   = 0;
         virtual auto update(float32 deltaTime) -> void = 0;
         virtual auto destroy() -> void                 = 0;
+    };
+
+    struct QURB_API CameraComponent
+    {
+        Camera camera = Camera();
+
+    public:
+        CameraComponent() = default;
+
+        [[nodiscard]] auto view() const -> const math::Matrix4x4f& { return camera.view(); }
+
+        [[nodiscard]] auto projection() const -> const math::Matrix4x4f& { return camera.projection(); }
     };
 }

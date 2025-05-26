@@ -1,5 +1,6 @@
 #include "Sandbox.hpp"
 
+#include <Containers/Array.hpp>
 #include <Core/Engine.hpp>
 #include <EntryPoint.hpp>
 #include <Math/Vector2.hpp>
@@ -44,26 +45,117 @@ auto SandboxApplication::initialize() -> void
 
     _renderContext = _engine->activeWindow().renderContext();
     _renderContext->retain();
+    _renderContext->window().registerEvent<WindowResizeEvent>(bind<&SandboxApplication::onWindowResize>(this));
 
-    auto vertices = quadVertices();
+    _scene         = std::make_unique<Scene>();
+    _sceneRenderer = std::make_unique<SceneRenderer>(*_scene, _device);
 
-    constexpr auto entityCount = 4;
+    createCamera();
+    createQuad();
 
-    auto positions = Vector<math::Vector3f> {
-        {-1.0f, -1.0f, 0.0f},
-        {1.0f,  -1.0f, 0.0f},
-        {1.0f,  1.0f,  0.0f},
-        {-1.0f, 1.0f,  0.0f},
-    };
+    onWindowResize(WindowResizeEvent(_renderContext->window()));
 
-    for (int i = 0; i < entityCount; ++i)
+    Log::info("{} initialized", _name);
+}
+
+auto SandboxApplication::shutdown() -> void
+{
+    for (auto& entity : _scene->entities())
     {
-        _scene.createEntity();
+        if (entity.hasComponent<MaterialComponent>())
+        {
+            auto& materialComponent = entity.getComponent<MaterialComponent>();
+            materialComponent.pipelineState->release();
+            materialComponent.shaderProgram->release();
+        }
+
+        if (entity.hasComponent<MeshComponent>())
+        {
+            auto& meshComponent = entity.getComponent<MeshComponent>();
+            meshComponent.vertexBuffer->release();
+        }
     }
 
-    for (int i = 0; i < entityCount; ++i)
+    _sceneRenderer.reset();
+    _scene.reset();
+
+    _renderContext->window().unregisterEvent<WindowResizeEvent>(bind<&SandboxApplication::onWindowResize>(this));
+    _renderContext->release();
+    _renderContext = nullptr;
+
+    _device->release();
+    _device = nullptr;
+
+    Log::info("{} shutdown", _name);
+}
+
+auto SandboxApplication::update(float32 deltaTime) -> void
+{
+    static auto time = 0.0f;
+    time += deltaTime;
+
+    for (auto& entity : _scene->entities())
     {
-        auto& entity = _scene.entities()[i];
+        if (entity.hasComponent<CameraComponent>())
+        {
+            continue;
+        }
+        auto& transformComponent = entity.getComponent<TransformComponent>();
+        transformComponent.eulerAngles.z += deltaTime * 50.0f;
+    }
+}
+
+auto SandboxApplication::render() -> void
+{
+    _renderContext->beginFrame();
+
+    _sceneRenderer->render(_renderContext);
+
+    _renderContext->present();
+    _renderContext->endFrame();
+}
+
+auto SandboxApplication::onWindowResize(const WindowResizeEvent& event) -> bool
+{
+    for (auto& entity : _scene->entities())
+    {
+        if (entity.hasComponent<CameraComponent>())
+        {
+            auto&   cameraComponent = entity.getComponent<CameraComponent>();
+            float32 aspectRatio     = static_cast<float32>(event.window.size().x) / static_cast<float32>(event.window.size().y);
+            // auto  projection       = makeOrthographic(0.0f, event.window.size().x, 0.0f, event.window.size().y, 0.1, 1000);
+            auto projection        = makePerspective(45.0f, aspectRatio, 0.1f, 1000.0f);
+            cameraComponent.camera = Camera(CameraType::Perspective, projection);
+            break;
+        }
+    }
+
+    return false;
+}
+
+auto SandboxApplication::createQuad() -> void
+{
+    constexpr auto quadCount = 4;
+
+    auto vertices  = quadVertices();
+    auto positions = Array<math::Vector3f, quadCount> {
+        {-1.0f, -1.0f, 1.0f},
+        {1.0f,  -1.0f, 1.0f},
+        {1.0f,  1.0f,  1.0f},
+        {-1.0f, 1.0f,  1.0f},
+    };
+
+    for (int i = 0; i < quadCount; ++i)
+    {
+        _scene->createEntity();
+    }
+
+    // Because `_scene->entities()[0]` is the camera entity.
+    for (int i = 0; i < quadCount; ++i)
+    {
+        auto& entity = _scene->entities()[i + 1];
+
+        entity.addComponent<TagComponent>().name = std::format("Quad {}", i + 1);
 
         auto& transformComponent = entity.addComponent<TransformComponent>();
         auto& meshComponent      = entity.addComponent<MeshComponent>();
@@ -94,54 +186,18 @@ auto SandboxApplication::initialize() -> void
 
         materialComponent.pipelineState = _device->createPipelineState(pipelineStateDescriptor);
     }
-
-    Log::info("{} initialized", _name);
 }
 
-auto SandboxApplication::shutdown() -> void
+auto SandboxApplication::createCamera() -> void
 {
-    for (auto& entity : _scene.entities())
-    {
-        if (entity.hasComponent<MaterialComponent>())
-        {
-            auto& materialComponent = entity.getComponent<MaterialComponent>();
-            materialComponent.pipelineState->release();
-            materialComponent.shaderProgram->release();
-        }
+    auto cameraEntity = _scene->createEntity();
 
-        if (entity.hasComponent<MeshComponent>())
-        {
-            auto& meshComponent = entity.getComponent<MeshComponent>();
-            meshComponent.vertexBuffer->release();
-        }
-    }
+    cameraEntity.addComponent<TagComponent>().name = "Camera";
 
-    _renderContext->release();
-    _renderContext = nullptr;
+    auto& transformComponent = cameraEntity.addComponent<TransformComponent>();
+    auto& cameraComponent    = cameraEntity.addComponent<CameraComponent>();
 
-    _device->release();
-    _device = nullptr;
-
-    Log::info("{} shutdown", _name);
-}
-
-auto SandboxApplication::update(float32 deltaTime) -> void
-{
-    for (auto& entity : _scene.entities())
-    {
-        auto& transformComponent = entity.getComponent<TransformComponent>();
-        transformComponent.eulerAngles.z = 45.0;
-    }
-}
-
-auto SandboxApplication::render() -> void
-{
-    _renderContext->beginFrame();
-
-    _sceneRenderer.render(_renderContext);
-
-    _renderContext->present();
-    _renderContext->endFrame();
+    transformComponent.position = {0.0f, 0.0f, -1.5f};
 }
 
 auto qurb::createApplication() -> Application*
