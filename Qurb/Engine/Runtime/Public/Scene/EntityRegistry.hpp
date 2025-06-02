@@ -4,7 +4,6 @@
 #include "CoreDefines.hpp"
 #include "CoreTypes.hpp"
 #include "Debug/Exceptions.hpp"
-#include "Log/Log.hpp"
 
 #include <format>
 #include <tuple>
@@ -20,9 +19,8 @@ namespace qurb
     class ComponentPool
     {
     public:
-        ComponentPool(usize stride = 0)
+        explicit ComponentPool(usize stride = 0)
             : _stride(stride)
-            , _data()
         {}
 
     public:
@@ -40,10 +38,10 @@ namespace qurb
         Vector<uint8> _data;
     };
 
-    class QURB_API EntityRegistery
+    class QURB_API EntityRegistry
     {
     public:
-        EntityRegistery() = default;
+        EntityRegistry() = default;
 
     public:
         auto createEntity() -> Entity;
@@ -81,7 +79,7 @@ namespace qurb
             static inline usize _counter = 0;
         };
 
-        friend class std::formatter<EntityRegistery>;
+        friend class std::formatter<EntityRegistry>;
 
     private:
         Vector<ComponentPool>        _componentPools;  // One per component type.
@@ -121,18 +119,18 @@ namespace qurb
     }
 
     //-----------------------------------------------------------------------------------------------------------------
-    // class EntityRegistery
+    // class EntityRegistry
     //-----------------------------------------------------------------------------------------------------------------
 
     template <typename T, typename... Args>
-    auto EntityRegistery::addComponent(EntityId id, Args&&... args) -> T&
+    auto EntityRegistry::addComponent(EntityId id, Args&&... args) -> T&
     {
         const auto componentId = Component::id<T>();
 
-        // if (hasComponent<T>(id))
-        // {
-        //     return _componentPools[componentId].template at<T>(id);
-        // }
+        if (hasComponent<T>(id))
+        {
+            return _componentPools[componentId].template at<T>(id);
+        }
 
         if (componentId >= _componentPools.size())
         {
@@ -149,7 +147,7 @@ namespace qurb
     }
 
     template <typename T>
-    auto EntityRegistery::getComponent(EntityId id) -> T&
+    auto EntityRegistry::getComponent(EntityId id) -> T&
     {
         const auto componentId = Component::id<T>();
 
@@ -162,13 +160,13 @@ namespace qurb
     }
 
     template <typename... Ts>
-    auto EntityRegistery::getComponents(EntityId id) -> std::tuple<Ts&...>
+    auto EntityRegistry::getComponents(EntityId id) -> std::tuple<Ts&...>
     {
         return std::tuple<Ts&...> {getComponent<Ts>(id)...};
     }
 
     template <typename T>
-    auto EntityRegistery::removeComponent(EntityId id) -> void
+    auto EntityRegistry::removeComponent(EntityId id) -> void
     {
         const auto componentId = Component::id<T>();
 
@@ -181,7 +179,7 @@ namespace qurb
     }
 
     template <typename T>
-    auto EntityRegistery::hasComponent(EntityId id) -> bool
+    auto EntityRegistry::hasComponent(EntityId id) -> bool
     {
         const auto componentId = Component::id<T>();
 
@@ -200,22 +198,22 @@ namespace qurb
     }
 
     template <typename... Ts>
-    auto EntityRegistery::hasComponents(EntityId id) -> bool
+    auto EntityRegistry::hasComponents(EntityId id) -> bool
     {
         return (hasComponent<Ts>(id) && ...);
     }
 }
 
 template <>
-struct std::formatter<qurb::EntityRegistery>
+struct std::formatter<qurb::EntityRegistry>
 {
     constexpr auto parse(std::format_parse_context& ctx) { return ctx.begin(); }
 
     template <typename FormatContext>
-    auto format(const qurb::EntityRegistery& r, FormatContext& ctx) const
+    auto format(const qurb::EntityRegistry& r, FormatContext& ctx) const
     {
         auto out = ctx.out();
-        out      = std::format_to(out, "EntityRegistery with {} component pools and {} entities", r._componentPools.size(), r._entitiesMask.size());
+        out      = std::format_to(out, "EntityRegistry with {} component pools and {} entities", r._componentPools.size(), r._entitiesMask.size());
         return out;
     }
 };

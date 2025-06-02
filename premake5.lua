@@ -1,6 +1,7 @@
 include_dirs = {}
 include_dirs["Engine.Core"] = "%{wks.location}/Qurb/Engine/Core/Public"
 include_dirs["Engine.Runtime"] = "%{wks.location}/Qurb/Engine/Runtime/Public"
+include_dirs["ThirdParty.stb"] = "%{wks.location}/Qurb/ThirdParty/stb/Public"
 
 workspace "Qurb"
     configurations { "Debug", "Release" }
@@ -19,4 +20,8 @@ workspace "Qurb"
 
     group "Samples"
         include "Samples/QurbSandbox/QurbSandbox.Build.lua"
+    group ""
+
+    group "ThirdParty"
+        include "Qurb/ThirdParty"
     group ""

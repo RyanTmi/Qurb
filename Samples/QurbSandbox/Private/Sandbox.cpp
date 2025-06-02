@@ -3,6 +3,7 @@
 #include <Containers/Array.hpp>
 #include <Core/Engine.hpp>
 #include <EntryPoint.hpp>
+#include <Input/Input.hpp>
 #include <Math/Vector2.hpp>
 #include <Math/Vector3.hpp>
 #include <Scene/Components.hpp>
@@ -29,12 +30,12 @@ struct Vertex3d
 auto quadVertices() -> Vector<Vertex3d>
 {
     return Vector<Vertex3d> {
-        {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{1.0f, -1.0f, 0.0f},  {1.0f, 0.0f}},
-        {{1.0f, 1.0f, 0.0f},   {1.0f, 1.0f}},
-        {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f}},
-        {{1.0f, 1.0f, 0.0f},   {1.0f, 1.0f}},
-        {{-1.0f, 1.0f, 0.0f},  {0.0f, 1.0f}},
+        {{-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+        {{1.0f, -1.0f, 0.0f},  {1.0f, 1.0f}},
+        {{1.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
+        {{-1.0f, -1.0f, 0.0f}, {0.0f, 1.0f}},
+        {{1.0f, 1.0f, 0.0f},   {1.0f, 0.0f}},
+        {{-1.0f, 1.0f, 0.0f},  {0.0f, 0.0f}},
     };
 }
 
@@ -89,21 +90,7 @@ auto SandboxApplication::shutdown() -> void
     Log::info("{} shutdown", _name);
 }
 
-auto SandboxApplication::update(float32 deltaTime) -> void
-{
-    static auto time = 0.0f;
-    time += deltaTime;
-
-    for (auto& entity : _scene->entities())
-    {
-        if (entity.hasComponent<CameraComponent>())
-        {
-            continue;
-        }
-        auto& transformComponent = entity.getComponent<TransformComponent>();
-        transformComponent.eulerAngles.z += deltaTime * 50.0f;
-    }
-}
+auto SandboxApplication::update(float32 deltaTime) -> void {}
 
 auto SandboxApplication::render() -> void
 {
@@ -121,10 +108,9 @@ auto SandboxApplication::onWindowResize(const WindowResizeEvent& event) -> bool
     {
         if (entity.hasComponent<CameraComponent>())
         {
-            auto&   cameraComponent = entity.getComponent<CameraComponent>();
-            float32 aspectRatio     = static_cast<float32>(event.window.size().x) / static_cast<float32>(event.window.size().y);
-            // auto  projection       = makeOrthographic(0.0f, event.window.size().x, 0.0f, event.window.size().y, 0.1, 1000);
-            auto projection        = makePerspective(45.0f, aspectRatio, 0.1f, 1000.0f);
+            auto& cameraComponent  = entity.getComponent<CameraComponent>();
+            auto  aspectRatio      = static_cast<float32>(event.window.size().x) / static_cast<float32>(event.window.size().y);
+            auto  projection       = makePerspective(45.0f, aspectRatio, 0.1f, 1000.0f);
             cameraComponent.camera = Camera(CameraType::Perspective, projection);
             break;
         }
@@ -135,14 +121,15 @@ auto SandboxApplication::onWindowResize(const WindowResizeEvent& event) -> bool
 
 auto SandboxApplication::createQuad() -> void
 {
-    constexpr auto quadCount = 4;
+    constexpr auto quadCount = 1;
 
     auto vertices  = quadVertices();
     auto positions = Array<math::Vector3f, quadCount> {
-        {-1.0f, -1.0f, 1.0f},
-        {1.0f,  -1.0f, 1.0f},
-        {1.0f,  1.0f,  1.0f},
-        {-1.0f, 1.0f,  1.0f},
+        {0.0f, 0.0f, 0.0f},
+        // {-1.0f, -1.0f, 1.0f},
+        // {1.0f,  -1.0f, 1.0f},
+        // {1.0f,  1.0f,  1.0f},
+        // {-1.0f, 1.0f,  1.0f},
     };
 
     for (int i = 0; i < quadCount; ++i)
@@ -161,8 +148,8 @@ auto SandboxApplication::createQuad() -> void
         auto& meshComponent      = entity.addComponent<MeshComponent>();
         auto& materialComponent  = entity.addComponent<MaterialComponent>();
 
-        transformComponent.position = positions[i] / 2.0f;
-        transformComponent.scale    = {.25f, .25f, 1.0f};
+        // transformComponent.position = positions[i] / 2.0f;
+        // transformComponent.scale    = {.25f, .25f, 1.0f};
 
         meshComponent.vertexBuffer = _device->createBuffer(
             rhi::BufferDescriptor {
@@ -185,6 +172,9 @@ auto SandboxApplication::createQuad() -> void
         pipelineStateDescriptor.shaderProgram = materialComponent.shaderProgram;
 
         materialComponent.pipelineState = _device->createPipelineState(pipelineStateDescriptor);
+
+        const char* textureName   = "../../Samples/QurbSandbox/Assets/Textures/PavingStones098_1K-PNG_Color.png";
+        materialComponent.texture = _engine->renderer().textureManager().getTexture(textureName);
     }
 }
 
@@ -197,7 +187,7 @@ auto SandboxApplication::createCamera() -> void
     auto& transformComponent = cameraEntity.addComponent<TransformComponent>();
     auto& cameraComponent    = cameraEntity.addComponent<CameraComponent>();
 
-    transformComponent.position = {0.0f, 0.0f, -1.5f};
+    transformComponent.position = {0.0f, 0.0f, -2.0f};
 }
 
 auto qurb::createApplication() -> Application*
