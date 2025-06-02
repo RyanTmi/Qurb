@@ -1,4 +1,4 @@
-/// \file TypeTraits.hpp
+/// \file CoreTraits.hpp
 
 #pragma once
 

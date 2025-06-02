@@ -99,10 +99,10 @@ namespace qurb
     template <typename... Args>
     auto Log::logMessage(LogLevel level, std::format_string<Args...> fmt, Args&&... args) -> void
     {
-        const auto info        = logInfoMap.at(level);
-        const auto message     = std::format(fmt, std::forward<Args>(args)...);
-        const auto fullMessage = std::format("[{}]: {}", info.header, message);
+        const auto [consoleColor, header, isError] = logInfoMap.at(level);
+        const auto message                         = std::format(fmt, std::forward<Args>(args)...);
+        const auto fullMessage                     = std::format("[{}]: {}", header, message);
 
-        Console::writeLine(fullMessage.c_str(), info.isError, info.consoleColor);
+        Console::writeLine(fullMessage.c_str(), isError, consoleColor);
     }
 }

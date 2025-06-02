@@ -4,7 +4,7 @@
 
 namespace qurb::rhi
 {
-    /// \brief The `TextureFormat` enum .
+    /// \brief The `TextureFormat` enum.
     enum class TextureFormat
     {
         Unknown,
@@ -49,7 +49,7 @@ namespace qurb::rhi
         RGBA16Sint,
         RGBA16Float,
 
-        // 32-bit formats (single channel and multi-channel)
+        // 32-bit formats (single channel and multichannel)
         R32Uint,
         R32Sint,
         R32Float,

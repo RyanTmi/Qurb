@@ -5,7 +5,6 @@
 #include "CoreDefines.hpp"
 #include "CoreTypes.hpp"
 
-#include <memory>
 #include <string>
 
 namespace qurb

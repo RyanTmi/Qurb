@@ -1,3 +1,5 @@
+/// \file Camera.hpp
+
 #pragma once
 
 #include "CoreDefines.hpp"
@@ -6,24 +8,18 @@
 
 namespace qurb
 {
-    //==================================================================================================================
-    // Enum : CameraType
-    //==================================================================================================================
-
+    /// \brief The `CameraType` enum.
     enum class CameraType : uint8
     {
         Orthographic,
         Perspective,
     };
 
-    //==================================================================================================================
-    // Class : Camera
-    //==================================================================================================================
-
-    class QURB_API Camera
+    /// \brief The `Camera` class.
+    class QURB_API Camera final
     {
     public:
-        Camera() = default;
+        Camera();
         Camera(CameraType cameraType, const math::Matrix4x4f& projection);
 
     public:
@@ -39,9 +35,9 @@ namespace qurb
     QURB_API auto makeOrthographic(float32 left, float32 right, float32 bottom, float32 top, float32 near, float32 far) -> math::Matrix4x4f;
     QURB_API auto makePerspective(float32 fov, float32 aspect, float32 near, float32 far) -> math::Matrix4x4f;
 
-    //==================================================================================================================
-    // Class : Camera
-    //==================================================================================================================
+    inline Camera::Camera()
+        : _cameraType(CameraType::Orthographic)
+    {}
 
     inline Camera::Camera(CameraType cameraType, const math::Matrix4x4f& projection)
         : _view(math::Matrix4x4f::identity)

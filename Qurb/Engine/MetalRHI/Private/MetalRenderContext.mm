@@ -50,6 +50,12 @@ namespace qurb::rhi::metal
         _swapChain->present(_commandBuffer);
     }
 
+    auto RenderContext::beginRenderPass(rhi::RenderTarget* renderTarget) -> void
+    {
+        const auto descriptor = RenderPassDescriptor();
+        beginRenderPass(renderTarget, descriptor);
+    }
+
     auto RenderContext::beginRenderPass(rhi::RenderTarget* renderTarget, const RenderPassDescriptor& descriptor) -> void
     {
         ensure(_renderCommandEncoder == nil, "Render command encoder is not nil.");

@@ -17,7 +17,7 @@ namespace qurb::rhi
     class Device : public Object
     {
     public:
-        virtual ~Device() = default;
+        ~Device() override = default;
 
     public:
         virtual auto createRenderContext(const RenderContextDescriptor& descriptor) -> RenderContext* = 0;

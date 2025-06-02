@@ -8,7 +8,6 @@
 #include "Math/TypeTraits.hpp"
 
 #include <format>
-#include <numeric>
 #include <span>
 
 namespace qurb::math

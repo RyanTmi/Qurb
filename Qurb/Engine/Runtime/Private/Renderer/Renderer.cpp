@@ -10,7 +10,7 @@ namespace qurb
     {
         ensure(_backendPlugin == nullptr, "Can only load one render backend");
 
-        auto plugin = pluginManager.getPlugin(backendName);
+        const auto plugin = pluginManager.getPlugin(backendName);
         if (plugin == nullptr)
         {
             Log::fatal("Failed to find render backend: {}", backendName);
@@ -24,7 +24,7 @@ namespace qurb
         Log::info("Loaded render backend: {}", _backendPlugin->name());
     }
 
-    auto Renderer::onWindowCreate(Window& window) -> void
+    auto Renderer::onWindowCreate(Window& window) const -> void
     {
         const auto renderContextDescriptor = rhi::RenderContextDescriptor {
             .swapChainDescriptor = rhi::SwapChainDescriptor {.window = window},

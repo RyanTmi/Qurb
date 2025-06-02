@@ -1,3 +1,5 @@
+/// \file PluginManager.hpp
+
 #pragma once
 
 #include "Containers/Vector.hpp"
@@ -7,7 +9,8 @@
 
 namespace qurb
 {
-    class PluginManager
+    /// \brief The `PluginManager` class.
+    class PluginManager final
     {
     public:
         PluginManager() = default;

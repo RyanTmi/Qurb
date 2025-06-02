@@ -129,7 +129,7 @@ namespace qurb::math
         const auto norm = std::sqrt(_x * _x + _y * _y + _z * _z + _w * _w);
         ensure(norm > 0, "Cannot normalize a zero quaternion");
 
-        return Quaternion<T>(_x / norm, _y / norm, _z / norm, _w / norm);
+        return Quaternion(_x / norm, _y / norm, _z / norm, _w / norm);
     }
 
     template <Real T>

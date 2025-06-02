@@ -4,7 +4,6 @@
 
 #include <concepts>
 #include <numbers>
-#include <type_traits>
 
 namespace qurb::math
 {

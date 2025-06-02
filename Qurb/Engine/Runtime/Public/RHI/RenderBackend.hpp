@@ -22,7 +22,7 @@ namespace qurb::rhi
         virtual ~RenderBackend() = default;
 
     public:
-        virtual auto type() const -> RenderBackendType = 0;
-        virtual auto createDevice() const -> Device*   = 0;
+        [[nodiscard]] virtual auto type() const -> RenderBackendType = 0;
+        [[nodiscard]] virtual auto createDevice() const -> Device*   = 0;
     };
 }

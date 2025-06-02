@@ -47,6 +47,7 @@ namespace qurb::rhi
             case Int4:   return 4 * 4;
             default:     break;
         }
+        return 0;
     }
 
     /// \brief The `BufferLayoutElement` struct.
@@ -72,7 +73,7 @@ namespace qurb::rhi
     {
     public:
         explicit ShaderProgram(const ShaderProgramDescriptor& descriptor);
-        virtual ~ShaderProgram() = default;
+        ~ShaderProgram() override = default;
 
     protected:
         ShaderProgramDescriptor descriptor_;

@@ -2,12 +2,14 @@
 
 #pragma once
 
+#include "CoreDefines.hpp"
 #include "CoreTypes.hpp"
 #include "Math/Vector4.hpp"
 
 namespace qurb
 {
-    struct Color final
+    /// \brief The `Color` class.
+    struct QURB_API Color final
     {
         float32 r;
         float32 g;

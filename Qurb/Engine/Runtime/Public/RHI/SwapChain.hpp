@@ -23,7 +23,7 @@ namespace qurb::rhi
     {
     public:
         explicit SwapChain(const SwapChainDescriptor& descriptor);
-        virtual ~SwapChain() = default;
+        ~SwapChain() override = default;
 
     public:
         virtual auto nextRenderTarget() -> RenderTarget* = 0;

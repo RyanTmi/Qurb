@@ -163,14 +163,14 @@ namespace qurb::math
     }
 
     template <Numeric T>
-    constexpr auto dot(const Vector2<T>& lhs, const Vector2<T>& rhs) -> T
+    constexpr QURB_API auto dot(const Vector2<T>& lhs, const Vector2<T>& rhs) -> T
     {
         return lhs.x * rhs.x + lhs.y * rhs.y;
     }
 }
 
 template <qurb::math::Numeric T>
-struct std::formatter<qurb::math::Vector2<T>>
+struct QURB_API std::formatter<qurb::math::Vector2<T>>
 {
     constexpr auto parse(std::format_parse_context& ctx) { return ctx.begin(); }
 

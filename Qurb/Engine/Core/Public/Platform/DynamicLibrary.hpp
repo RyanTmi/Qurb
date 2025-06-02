@@ -7,11 +7,10 @@
 
 #include <string>
 #include <string_view>
-#include <vector>
 
 namespace qurb
 {
-    /// \brief A class reprensenting a dynamic library.
+    /// \brief The `DynamicLibrary` class.
     class QURB_API DynamicLibrary
     {
     public:

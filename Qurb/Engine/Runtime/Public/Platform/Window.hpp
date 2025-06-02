@@ -96,13 +96,13 @@ namespace qurb
     }
 
     template <Dispatchable E>
-    auto Window::registerEvent(EventDispatcher<E>::Listener listener) -> void
+    auto Window::registerEvent(typename EventDispatcher<E>::Listener listener) -> void
     {
         std::get<EventDispatcher<E>>(_dispatchers).registerListener(listener);
     }
 
     template <Dispatchable E>
-    auto Window::unregisterEvent(EventDispatcher<E>::Listener listener) -> void
+    auto Window::unregisterEvent(typename EventDispatcher<E>::Listener listener) -> void
     {
         std::get<EventDispatcher<E>>(_dispatchers).unregisterListener(listener);
     }

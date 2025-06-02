@@ -2,8 +2,6 @@
 
 #pragma once
 
-#include "Platform/Window.hpp"
-
 namespace qurb
 {
     /// \brief The `Platform` class

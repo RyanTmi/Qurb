@@ -3,17 +3,18 @@
 #pragma once
 
 #include "RHI/Object.hpp"
-#include "RHI/RenderPass.hpp"
 
 namespace qurb::rhi
 {
+    /// \brief The `RenderTargetDescriptor` struct.
     struct RenderTargetDescriptor
     {};
 
+    /// \brief The `RenderTarget` class.
     class RenderTarget : public Object
     {
     public:
-        virtual ~RenderTarget() = default;
+        ~RenderTarget() override = default;
     };
 
     using RenderTargetRef = Ref<RenderTarget>;

@@ -8,6 +8,7 @@
 
 namespace qurb
 {
+    /// \brief The `Clock` class.
     class Clock final
     {
     public:

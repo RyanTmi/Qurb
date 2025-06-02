@@ -38,17 +38,12 @@ namespace qurb::rhi
     {
     public:
         explicit Buffer(const BufferDescriptor& descriptor);
-        virtual ~Buffer() = default;
+        ~Buffer() override = default;
 
     public:
         [[nodiscard]] auto size() const -> usize;
-        [[nodiscard]] auto size() -> usize;
-
         [[nodiscard]] auto type() const -> BufferType;
-        [[nodiscard]] auto type() -> BufferType;
-
         [[nodiscard]] auto usage() const -> BufferUsage;
-        [[nodiscard]] auto usage() -> BufferUsage;
 
         template <typename T>
         auto map() -> T*;
@@ -75,17 +70,7 @@ namespace qurb::rhi
         return _size;
     }
 
-    inline auto Buffer::size() -> usize
-    {
-        return _size;
-    }
-
     inline auto Buffer::type() const -> BufferType
-    {
-        return _type;
-    }
-
-    inline auto Buffer::type() -> BufferType
     {
         return _type;
     }
@@ -95,14 +80,9 @@ namespace qurb::rhi
         return _usage;
     }
 
-    inline auto Buffer::usage() -> BufferUsage
-    {
-        return _usage;
-    }
-
     template <typename T>
     auto Buffer::map() -> T*
     {
-        return reinterpret_cast<T*>(map());
+        return static_cast<T*>(map());
     }
 }

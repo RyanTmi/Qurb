@@ -1,7 +1,10 @@
+/// \file Object.hpp
+
 #pragma once
 
 #include "CoreTypes.hpp"
 
+#include <atomic>
 #include <type_traits>
 
 namespace qurb::rhi
@@ -20,13 +23,13 @@ namespace qurb::rhi
         Object& operator=(Object&&)      = delete;
 
     public:
-        auto release() -> void;
-        auto retain() -> void;
+        auto release() const -> void;
+        auto retain() const -> void;
 
-        [[nodiscard]] auto retainCount() const -> uint64;
+        [[nodiscard]] auto retainCount() const -> uint32;
 
     private:
-        uint64 _retainCount;
+        mutable std::atomic<uint32> _retainCount;
     };
 
     /// \brief The `Ref` class.
@@ -63,7 +66,7 @@ namespace qurb::rhi
         operator bool() const noexcept;
 
         auto reset(T* ptr = nullptr) noexcept -> void;
-        auto swap(Ref& o) noexcept -> void;
+        auto swap(Ref& other) noexcept -> void;
 
         template <typename U>
         auto as() const noexcept -> Ref<U>;
@@ -87,7 +90,7 @@ namespace qurb::rhi
         : _retainCount(1)
     {}
 
-    inline auto Object::release() -> void
+    inline auto Object::release() const -> void
     {
         if (--_retainCount == 0)
         {
@@ -95,14 +98,14 @@ namespace qurb::rhi
         }
     }
 
-    inline auto Object::retain() -> void
+    inline auto Object::retain() const -> void
     {
         ++_retainCount;
     }
 
-    inline auto Object::retainCount() const -> uint64
+    inline auto Object::retainCount() const -> uint32
     {
-        return _retainCount;
+        return _retainCount.load(std::memory_order_relaxed);
     }
 
     //-----------------------------------------------------------------------------------------------------------------

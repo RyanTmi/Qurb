@@ -14,10 +14,10 @@ namespace qurb
 
         for (auto pluginName : pluginNames)
         {
-            Plugin* plugin = nullptr;
             {
-                auto library      = DynamicLibrary(pluginName);
-                auto createPlugin = library.loadFunction<CreatePluginFunction>("createPlugin");
+                Plugin*    plugin       = nullptr;
+                auto       library      = DynamicLibrary(pluginName);
+                const auto createPlugin = library.loadFunction<CreatePluginFunction>("createPlugin");
 
                 plugin = createPlugin(&library);
                 ensure(plugin != nullptr, "Failed to create plugin: {}", pluginName);
@@ -33,7 +33,7 @@ namespace qurb
 
     auto PluginManager::getPlugin(std::string_view name) -> Plugin*
     {
-        for (auto& plugin : _plugins)
+        for (const auto& plugin : _plugins)
         {
             if (plugin->libraryName() == name or plugin->name() == name)
             {
@@ -46,7 +46,7 @@ namespace qurb
 
     auto PluginManager::initializePlugins() -> void
     {
-        for (auto& plugin : _plugins)
+        for (const auto& plugin : _plugins)
         {
             plugin->initialize();
         }

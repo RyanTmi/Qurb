@@ -1,7 +1,7 @@
 #include "Core/Engine.hpp"
 
 #include "Containers/Vector.hpp"
-#include "Log/Log.hpp"
+#include "Input/Input.hpp"
 
 namespace qurb
 {
@@ -52,7 +52,7 @@ namespace qurb
             }
 
             _clock.update();
-            deltaTime = _clock.deltaTime();
+            deltaTime = static_cast<float32>(_clock.deltaTime());
 
             _application->update(deltaTime);
             _application->render();
@@ -60,6 +60,8 @@ namespace qurb
             // Destroy window that should be closed
             destroyClosedWindows();
             _isRunning = not _windows.empty();
+
+            Input::update();
         }
     }
 

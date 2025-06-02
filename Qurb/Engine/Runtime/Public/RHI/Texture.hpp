@@ -21,7 +21,7 @@ namespace qurb::rhi
     class Texture : public Object
     {
     public:
-        virtual ~Texture() = default;
+        ~Texture() override = default;
     };
 
     using TextureRef = Ref<Texture>;

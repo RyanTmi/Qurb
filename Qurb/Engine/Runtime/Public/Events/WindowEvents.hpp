@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "CoreTypes.hpp"
 #include "Events/Event.hpp"
 
 namespace qurb

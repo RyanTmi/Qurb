@@ -32,6 +32,7 @@ namespace qurb::rhi::metal
 
         auto present() -> void override;
 
+        auto beginRenderPass(rhi::RenderTarget* renderTarget) -> void override;
         auto beginRenderPass(rhi::RenderTarget* renderTarget, const RenderPassDescriptor& descriptor) -> void override;
         auto endRenderPass() -> void override;
 

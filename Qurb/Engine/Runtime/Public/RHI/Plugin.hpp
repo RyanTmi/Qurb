@@ -15,10 +15,10 @@ namespace qurb::rhi
 
     public:
         explicit Plugin(DynamicLibrary&& library);
-        virtual ~Plugin() = default;
+        ~Plugin() override = default;
 
     public:
-        virtual auto createRenderBackend() const -> RenderBackend* = 0;
+        [[nodiscard]] virtual auto createRenderBackend() const -> RenderBackend* = 0;
     };
 
     inline Plugin::Plugin(DynamicLibrary&& library)

@@ -5,7 +5,6 @@
 #include "CoreDefines.hpp"
 #include "Platform/DynamicLibrary.hpp"
 
-#include <string>
 #include <string_view>
 
 namespace qurb
@@ -21,9 +20,9 @@ namespace qurb
         [[nodiscard]] auto libraryName() const -> std::string_view;
 
     public:
-        virtual auto name() const -> std::string_view        = 0;
-        virtual auto description() const -> std::string_view = 0;
-        virtual auto version() const -> std::string_view     = 0;
+        [[nodiscard]] virtual auto name() const -> std::string_view        = 0;
+        [[nodiscard]] virtual auto description() const -> std::string_view = 0;
+        [[nodiscard]] virtual auto version() const -> std::string_view     = 0;
 
         virtual auto initialize() -> void {}
 

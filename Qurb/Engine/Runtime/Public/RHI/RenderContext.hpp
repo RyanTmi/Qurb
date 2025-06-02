@@ -8,7 +8,6 @@
 #include "RHI/PipelineState.hpp"
 #include "RHI/RenderPass.hpp"
 #include "RHI/RenderTarget.hpp"
-#include "RHI/ShaderProgram.hpp"
 #include "RHI/SwapChain.hpp"
 #include "RHI/Texture.hpp"
 
@@ -30,10 +29,10 @@ namespace qurb::rhi
     {
     public:
         explicit RenderContext(const RenderContextDescriptor& descriptor);
-        virtual ~RenderContext() = default;
+        ~RenderContext() override = default;
 
     public:
-        auto window() -> Window&;
+        auto window() const -> Window&;
 
         virtual auto swapChain() -> SwapChain* = 0;
 
@@ -42,8 +41,9 @@ namespace qurb::rhi
 
         virtual auto present() -> void = 0;
 
-        virtual auto beginRenderPass(RenderTarget* renderTarget, const RenderPassDescriptor& descriptor = {}) -> void = 0;
-        virtual auto endRenderPass() -> void                                                                          = 0;
+        virtual auto beginRenderPass(RenderTarget* renderTarget) -> void                                         = 0;
+        virtual auto beginRenderPass(RenderTarget* renderTarget, const RenderPassDescriptor& descriptor) -> void = 0;
+        virtual auto endRenderPass() -> void                                                                     = 0;
 
         virtual auto pushConstants(const void* data, usize size) -> void = 0;
 
@@ -65,7 +65,7 @@ namespace qurb::rhi
         : _window(descriptor.swapChainDescriptor.window)
     {}
 
-    inline auto RenderContext::window() -> Window&
+    inline auto RenderContext::window() const -> Window&
     {
         return _window;
     }

@@ -203,7 +203,7 @@ namespace qurb::rhi
     public:
         explicit PipelineState(const PipelineStateDescriptor& descriptor);
 
-        virtual ~PipelineState() = default;
+        ~PipelineState() override = default;
 
     protected:
         PipelineStateDescriptor _descriptor;
