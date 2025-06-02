@@ -1,3 +1,5 @@
+/// \file SceneRenderer.hpp
+
 #pragma once
 
 #include "CoreDefines.hpp"
@@ -9,6 +11,7 @@
 
 namespace qurb
 {
+    /// \brief The `SceneRenderer` class.
     class QURB_API SceneRenderer
     {
     public:
@@ -18,7 +21,7 @@ namespace qurb
     public:
         /// \brief Renders the scene.
         /// \param renderContext The render context.
-        auto render(rhi::RenderContext* renderContext) -> void;
+        auto render(rhi::RenderContext* renderContext) const -> void;
 
     private:
         Scene&       _scene;
@@ -34,10 +37,10 @@ namespace qurb
         _device->retain();
         _sceneConstantsBuffer = _device->createBuffer(
             rhi::BufferDescriptor {
+                .initialData = nullptr,
                 .bufferSize  = 2 * sizeof(math::Matrix4x4f),
                 .bufferType  = rhi::BufferType::Vertex,
                 .bufferUsage = rhi::BufferUsage::Dynamic,
-                .initialData = nullptr,
             });
     }
 

@@ -7,7 +7,7 @@
 #include "Math/Vector3.hpp"
 #include "RHI/Buffer.hpp"
 #include "RHI/PipelineState.hpp"
-#include "RHI/ShaderProgram.hpp"
+#include "RHI/Texture.hpp"
 #include "Scene/Camera.hpp"
 
 namespace qurb
@@ -60,6 +60,7 @@ namespace qurb
     {
         rhi::ShaderProgram* shaderProgram;
         rhi::PipelineState* pipelineState;
+        rhi::Texture*       texture;
 
     public:
         MaterialComponent() = default;

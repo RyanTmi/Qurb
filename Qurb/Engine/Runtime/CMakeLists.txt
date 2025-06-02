@@ -3,12 +3,18 @@
 add_library(EngineRuntime SHARED)
 
 set(PUBLIC_HEADERS
+    Public/Assets/TextureManager.hpp
+
     Public/Core/Application.hpp
     Public/Core/Engine.hpp
 
     Public/Events/Event.hpp
     Public/Events/EventDispatcher.hpp
     Public/Events/WindowEvents.hpp
+
+    Public/Input/Input.hpp
+    Public/Input/KeyCode.hpp
+    Public/Input/MouseButton.hpp
 
     Public/Platform/Platform.hpp
     Public/Platform/Window.hpp
@@ -17,6 +23,7 @@ set(PUBLIC_HEADERS
     Public/Plugins/Plugin.hpp
     Public/Plugins/PluginManager.hpp
 
+    Public/Renderer/Color.hpp
     Public/Renderer/Renderer.hpp
 
     Public/RHI/Buffer.hpp
@@ -34,7 +41,7 @@ set(PUBLIC_HEADERS
     Public/Scene/Camera.hpp
     Public/Scene/Components.hpp
     Public/Scene/Entity.hpp
-    Public/Scene/EntityRegistery.hpp
+    Public/Scene/EntityRegistry.hpp
     Public/Scene/Scene.hpp
     Public/Scene/SceneRenderer.hpp
 
@@ -45,7 +52,12 @@ set(PRIVATE_HEADERS
 )
 
 set(PRIVATE_SOURCES
+    Private/Assets/TextureManager.cpp
+
     Private/Core/Engine.cpp
+
+    Private/Input/Input.cpp
+    Private/Input/KeyCode.cpp
 
     Private/Plugins/PluginManager.cpp
 
@@ -53,7 +65,7 @@ set(PRIVATE_SOURCES
     Private/Renderer/Color.cpp
 
     Private/Scene/Camera.cpp
-    Private/Scene/EntityRegistery.cpp
+    Private/Scene/EntityRegistry.cpp
     Private/Scene/Scene.cpp
     Private/Scene/SceneRenderer.cpp
 )
@@ -91,6 +103,7 @@ target_include_directories(EngineRuntime
 target_link_libraries(EngineRuntime
     PUBLIC
         EngineCore
+        stb
 )
 
 target_compile_definitions(EngineRuntime

@@ -5,15 +5,15 @@
 
 namespace qurb
 {
-    auto SceneRenderer::render(rhi::RenderContext* renderContext) -> void
+    auto SceneRenderer::render(rhi::RenderContext* renderContext) const -> void
     {
         static auto renderPassDescriptor = rhi::RenderPassDescriptor {
             .clearColor = Color::black,
         };
 
         // Get the swap chain.
-        auto swapChain    = renderContext->swapChain();
-        auto renderTarget = swapChain->nextRenderTarget();
+        const auto swapChain    = renderContext->swapChain();
+        const auto renderTarget = swapChain->nextRenderTarget();
 
         // Geometry render pass.
         renderContext->beginRenderPass(renderTarget, renderPassDescriptor);
@@ -44,6 +44,7 @@ namespace qurb
                 renderContext->bindPipelineState(materialComponent.pipelineState);
                 renderContext->pushConstants(&transformMatrix, sizeof(math::Matrix4x4f));
                 renderContext->bindVertexBuffer(meshComponent.vertexBuffer, 0, 0);
+                renderContext->bindFragmentTexture(materialComponent.texture, 0);
                 renderContext->draw(meshComponent.vertexCount, 0);
             }
         }

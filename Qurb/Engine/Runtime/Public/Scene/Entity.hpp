@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreDefines.hpp"
-#include "Scene/EntityRegistery.hpp"
+#include "Scene/EntityRegistry.hpp"
 
 #include <limits>
 #include <tuple>
@@ -12,11 +12,11 @@ namespace qurb
 {
     constexpr auto invalidEntityId = std::numeric_limits<EntityId>::max();
 
-    // \brief The `Entity` class.
+    /// \brief The `Entity` class.
     class QURB_API Entity final
     {
     public:
-        Entity(EntityRegistery& registery, EntityId id = invalidEntityId);
+        explicit Entity(EntityRegistry& registry, EntityId id = invalidEntityId);
 
     public:
         [[nodiscard]] auto id() const -> EntityId { return _id; }
@@ -31,57 +31,57 @@ namespace qurb
         auto getComponents() -> std::tuple<Ts&...>;
 
         template <typename T>
-        auto hasComponent() -> bool;
+        [[nodiscard]] auto hasComponent() const -> bool;
 
         template <typename... Ts>
-        auto hasComponents() -> bool;
+        [[nodiscard]] auto hasComponents() const -> bool;
 
         template <typename T>
-        auto removeComponent() -> void;
+        auto removeComponent() const -> void;
 
     private:
-        EntityRegistery& _registery;
+        EntityRegistry& _registry;
         EntityId         _id;
     };
 
-    inline Entity::Entity(EntityRegistery& registery, EntityId id)
-        : _registery(registery)
+    inline Entity::Entity(EntityRegistry& registry, EntityId id)
+        : _registry(registry)
         , _id(id)
     {}
 
     template <typename T, typename... Args>
     auto Entity::addComponent(Args&&... args) -> T&
     {
-        return _registery.addComponent<T>(_id, std::forward<Args>(args)...);
+        return _registry.addComponent<T>(_id, std::forward<Args>(args)...);
     }
 
     template <typename T>
     auto Entity::getComponent() -> T&
     {
-        return _registery.getComponent<T>(_id);
+        return _registry.getComponent<T>(_id);
     }
 
     template <typename... Ts>
     auto Entity::getComponents() -> std::tuple<Ts&...>
     {
-        return _registery.getComponents<Ts...>(_id);
+        return _registry.getComponents<Ts...>(_id);
     }
 
     template <typename T>
-    auto Entity::hasComponent() -> bool
+    auto Entity::hasComponent() const -> bool
     {
-        return _registery.hasComponent<T>(_id);
+        return _registry.hasComponent<T>(_id);
     }
 
     template <typename... Ts>
-    auto Entity::hasComponents() -> bool
+    auto Entity::hasComponents() const -> bool
     {
-        return _registery.hasComponents<Ts...>(_id);
+        return _registry.hasComponents<Ts...>(_id);
     }
 
     template <typename T>
-    auto Entity::removeComponent() -> void
+    auto Entity::removeComponent() const -> void
     {
-        return _registery.removeComponent<T>(_id);
+        return _registry.removeComponent<T>(_id);
     }
 }
