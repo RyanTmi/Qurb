@@ -24,6 +24,7 @@ project "Runtime"
         "Private",
 
         include_dirs["Engine.Core"],
+        include_dirs["ThirdParty.stb"],
     }
 
     filter { "system:macosx" }

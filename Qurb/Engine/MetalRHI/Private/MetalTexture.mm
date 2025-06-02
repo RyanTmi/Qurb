@@ -13,22 +13,23 @@ namespace qurb::rhi::metal
     {
         _device->retain();
 
-        @autoreleasepool
+        auto desc = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:toMTLPixelFormat(descriptor.format)
+                                                                       width:descriptor.width
+                                                                      height:descriptor.height
+                                                                   mipmapped:NO];
+        [desc setStorageMode:MTLStorageModeShared];
+
+        _handle = [_device->handle() newTextureWithDescriptor:desc];
+        ensure(_handle != nil, "Failed to create MTLTexture.");
+
+        [desc release];
+
+        if (descriptor.data != nullptr)
         {
-            auto desc = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:toMTLPixelFormat(descriptor.format)
-                                                                           width:descriptor.width
-                                                                          height:descriptor.height
-                                                                       mipmapped:NO];
-            _handle   = [_device->handle() newTextureWithDescriptor:desc];
-            ensure(_handle != nil, "Failed to create MTLTexture.");
+            MTLRegion  region      = MTLRegionMake2D(0, 0, descriptor.width, descriptor.height);
+            NSUInteger bytesPerRow = 4 * descriptor.width;
 
-            if (descriptor.data != nullptr)
-            {
-                MTLRegion  region      = MTLRegionMake2D(0, 0, descriptor.width, descriptor.height);
-                NSUInteger bytesPerRow = 4 * descriptor.width;
-
-                [_handle replaceRegion:region mipmapLevel:0 withBytes:descriptor.data bytesPerRow:bytesPerRow];
-            }
+            [_handle replaceRegion:region mipmapLevel:0 withBytes:descriptor.data bytesPerRow:bytesPerRow];
         }
     }
 

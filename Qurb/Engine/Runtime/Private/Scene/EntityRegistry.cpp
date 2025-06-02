@@ -1,10 +1,10 @@
-#include "Scene/EntityRegistery.hpp"
+#include "Scene/EntityRegistry.hpp"
 
 #include "Scene/Entity.hpp"
 
 namespace qurb
 {
-    auto EntityRegistery::createEntity() -> Entity
+    auto EntityRegistry::createEntity() -> Entity
     {
         auto entityId = invalidEntityId;
 

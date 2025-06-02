@@ -17,6 +17,7 @@ namespace qurb
     class QURB_API Array
     {
     public:
+        constexpr Array() noexcept = default;
         constexpr Array(std::initializer_list<T> init) noexcept;
 
     public:
